@@ -4,6 +4,7 @@ import SpotifyWebApi from 'spotify-web-api-js';
 import PlaylistEntry from './PlaylistEntry';
 import Player from './Player.js';
 import FlatButton from 'material-ui/FlatButton';
+import sampleData from '../lib/sampleData.js'
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -11,7 +12,7 @@ class Playlist extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      songs: [],
+      songs: sampleData.tracks.items,
       currentSong: '',
       deviceId: '',
       currentUser: 'annonymous'
@@ -25,7 +26,7 @@ class Playlist extends React.Component {
   componentDidMount() {
     this.getSpotifyToken();
     this.getDeviceId();
-    this.getAllSongs();
+    // this.getAllSongs();
   }
 
   getAllSongs() {
