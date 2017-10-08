@@ -126,6 +126,22 @@ exports.getHostInfo = (req, res) => {
   })
 };
 
+exports.getHostPlaylists = (req, res) => {
+  const settings = {
+    url: 'https://api.spotify.com/v1/me/playlists',
+    headers: {
+      'Authorization': 'Bearer ' + exports.tokens.access_token
+    }
+  }
+
+  request.get(settings, function(error, response, body) {
+    if (!error) {
+      res.send(body);
+    }
+  })
+
+}
+
 exports.tokens = {
   access_token : null,
   refresh_token : null
