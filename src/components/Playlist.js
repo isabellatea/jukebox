@@ -7,6 +7,7 @@ import PlaylistPlayer from './PlaylistPlayer.js';
 import StartParty from './StartParty.js';
 import FlatButton from 'material-ui/FlatButton';
 import sampleData from '../lib/sampleData.js';
+import jquery from 'jquery';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -14,11 +15,13 @@ class Playlist extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      songs: sampleData.tracks.items,
+      songs: [],
       currentSong: '',
       deviceId: '',
       currentUser: '',
-      userType: null
+      userType: null,
+      playlist: null,
+      interval: null
     }
 
 
@@ -30,6 +33,8 @@ class Playlist extends React.Component {
     this.getDeviceId = this.getDeviceId.bind(this);
     this.getHostInfo = this.getHostInfo.bind(this);
     this.getSpotifyToken = this.getSpotifyToken.bind(this);
+    this.createPlaylist = this.createPlaylist.bind(this);
+    this.songEnded = this.songEnded.bind(this);
 
   }
 
@@ -75,14 +80,12 @@ class Playlist extends React.Component {
   getSpotifyToken() {
     axios.get(`/tokens`)
     .then((response) => {
-      console.log(response.data);
       const access_token = response.data.access_token;
       const refresh_token = response.data.refresh_token;
       if (access_token) {
         spotifyApi.setAccessToken(access_token);
         this.setState({userType: 'host'});
       }
-      console.log('here i am:', this.state.userType);
     })
     .then((response) => {
       if (this.state.userType === 'host') {
@@ -114,23 +117,50 @@ class Playlist extends React.Component {
   getHostInfo() {
     axios.get('/hostInfo')
     .then((response) => {
-      console.log(response.data);
       this.setState({currentUser : response.data.id});
     })
   }
 
-  playCurrentSong(deviceId, trackId) {
+  playCurrentSong(deviceId, trackId, duration) {
     spotifyApi.play({
       device_id: deviceId,
       uris: ['spotify:track:' + trackId]
     });
+    console.log('play for duration:', duration);
+    if (this.state.interval) {
+      clearInterval(this.state.interval);
+    }
+    //var interval = setInterval(this.timer.bind(this), 1000);
+    var interval = setTimeout(this.songEnded.bind(this), duration);
+    this.setState({interval: interval});
   };
+
+  timer(){
+    console.log('playing');
+  }
+
+  songEnded() {
+    console.log('song ended');
+    this.handlePlayButtonClick();
+  }
+
+  createPlaylist() {
+    this.setState({playlist : 'https://open.spotify.com/embed/user/ctnswb/playlist/0MCbu9ncrLgpkQRmp6mxpC'});
+  }
+
+  getExistingPlaylists() {
+    axios.get('/hostPlaylists')
+    .then((response) => {
+      console.log(response.data);
+    })
+  }
 
   handlePlayButtonClick () {
     const trackId = this.state.songs[0].link.split('track/')[1];
     const songId = this.state.songs[0]._id;
+    console.log(this.state.songs[0]);
     this.setState({currentSong: this.state.songs[0]});
-    this.playCurrentSong(this.state.deviceId, trackId);
+    this.playCurrentSong(this.state.deviceId, trackId, this.state.songs[0].duration_ms);
     this.removeSong(songId);
   }
 
@@ -176,7 +206,11 @@ class Playlist extends React.Component {
         return (
           <div>
             <h2>HI {this.state.currentUser}!!</h2>
-            <div style={playerStyle}> <PlaylistPlayer /></div>
+
+{ this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
+              { !this.state.playlist && <div><FlatButton onClick={this.createPlaylist} label="Start a Playlist"/></div>}
+
+
             <div style={playButtonStyle}><FlatButton onClick={this.handlePlayButtonClick} label="Play top song" primary={true} /></div>
             <div style={playListStyle} >
             { this.state.songs && this.state.songs.map((song, i) => {
@@ -217,5 +251,5 @@ class Playlist extends React.Component {
       )
   }
 }
-
+             // { this.state.playlist && <div style={playerStyle}> <PlaylistPlayer playlist={this.state.playlist}/></div> }
 export default Playlist;

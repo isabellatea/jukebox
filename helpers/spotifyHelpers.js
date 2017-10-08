@@ -121,7 +121,6 @@ exports.getHostInfo = (req, res) => {
 
   request.get(settings, function(error, response, body) {
     if (!error) {
-      console.log(body);
       res.send(body);
     }
   })

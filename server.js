@@ -21,6 +21,8 @@ if (!env.prod) {
   }));
 }
 
+
+
 // *** Static Assets ***
 app.use(express.static(__dirname + '/public'));
 
@@ -49,15 +51,41 @@ app.use(session({
 const spotifyHelpers = require('./helpers/spotifyHelpers.js');
 const tokens = spotifyHelpers.tokens;
 
-app.get('/tokens', (req, res) => {
-  res.send(tokens);
+
+// *** Server ***
+const server = app.listen(3000, () => {
+  console.log('Listening at http://localhost:3000');
 });
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  ROUTES to ACCESS SPOTIFY API
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 
 app.get('/hostInfo', (req, res) => {
   spotifyHelpers.getHostInfo(req, res);
 });
+// fetch song research results and send to client
+app.get('/songs/search', (req, res) => {
+  spotifyHelpers.getTrackSearchResults(req.query.query)
+  .then((results) => {
+      res.json(results);
+    });
+});
+// Host Authentication
+app.get('/hostLogin', (req, res) => {
+  spotifyHelpers.handleHostLogin(req, res);
+});
 
-// *** Routes ***
+app.get('/callback', (req, res) => {
+  spotifyHelpers.redirectAfterLogin(req, res);
+});
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  ROUTES to ACCESS DATABASE SONG COLLECTION
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 // fetch top 50 songs by netVoteCount from songs collection and send to client
 app.get('/songs', (req, res) => {
@@ -65,16 +93,6 @@ app.get('/songs', (req, res) => {
   .then((songs) => {
     res.json(songs);
   });
-
-
-});
-
-// fetch song research results and send to client
-app.get('/songs/search', (req, res) => {
-  spotifyHelpers.getTrackSearchResults(req.query.query)
-  .then((results) => {
-      res.json(results);
-    });
 });
 
 // add song to both user collection and songs collection
@@ -84,7 +102,8 @@ app.post('/songs', (req, res) => {
     image: req.body.image,
     link: req.body.link,
     userName: req.body.userName,
-    artist: req.body.artist
+    artist: req.body.artist,
+    duration: req.body.duration
   });
   User.findOne({name: req.body.userName})
   .then((user) => {
@@ -124,6 +143,10 @@ app.delete('/song', (req, res) => {
   res.sendStatus(201);
 });
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  ROUTES to ACCESS DATABASE USER COLLECTION
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 // fetch all users from users collection and send to client
 app.get('/users', (req,res) => {
   User.find({})
@@ -152,13 +175,12 @@ app.post('/signup', (req, res) => {
   });
 });
 
-// Host Authentication
-app.get('/hostLogin', (req, res) => {
-  spotifyHelpers.handleHostLogin(req, res);
-});
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  ALL Other Routes
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-app.get('/callback', (req, res) => {
-  spotifyHelpers.redirectAfterLogin(req, res);
+app.get('/tokens', (req, res) => {
+  res.send(tokens);
 });
 
 // send 404 to client
@@ -166,8 +188,5 @@ app.get('/*', (req, res) => {
   res.status(404).send('Not Found');
 });
 
-// *** Server ***
-const server = app.listen(3000, () => {
-  console.log('Listening at http://localhost:3000');
-});
+
 
