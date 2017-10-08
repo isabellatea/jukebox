@@ -25,8 +25,9 @@ if (!env.prod) {
 app.use(express.static(__dirname + '/public'));
 
 // *** Database ***
-const User = require('./db/user');
-const Song = require('./db/song');
+const Db = require('./db/config').mongoose;
+const User = require('./db/config').user;
+const Song = require('./db/config').song;
 
 // *** Parser ***
 const bodyParser = require('body-parser');
@@ -46,6 +47,15 @@ app.use(session({
 
 // *** Helper ***
 const spotifyHelpers = require('./helpers/spotifyHelpers.js');
+const tokens = spotifyHelpers.tokens;
+
+app.get('/tokens', (req, res) => {
+  res.send(tokens);
+});
+
+app.get('/hostInfo', (req, res) => {
+  spotifyHelpers.getHostInfo(req, res);
+});
 
 // *** Routes ***
 
@@ -55,6 +65,8 @@ app.get('/songs', (req, res) => {
   .then((songs) => {
     res.json(songs);
   });
+
+
 });
 
 // fetch song research results and send to client

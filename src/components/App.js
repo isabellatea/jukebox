@@ -4,6 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Navbar from './Navbar';
 import Container from './Container';
 import Banner from './Banner';
+import Header from './Header';
 
 const App =  (props) => {
   return (
