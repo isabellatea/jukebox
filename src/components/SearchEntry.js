@@ -8,18 +8,10 @@ const SearchEntry = (props) => {
   const clickHandler = () => {
     props.onAdd(props.Result);
   }
-  const cardStyle = {
-    display: 'block',
-    margin: '40px',
-    width: '250px',
-    margin: '15px',
-    transitionDuration: '0.3s',
-    float:'left',
-    padding: '2px'
-  }
+
   return(
     <div>
-      <Card style={cardStyle}>
+      <Card className='cardStyle'>
         <CardMedia>
           <img src={props.Result.image} alt="" />
         </CardMedia>

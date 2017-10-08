@@ -3,7 +3,10 @@ import axios from 'axios';
 import SpotifyWebApi from 'spotify-web-api-js';
 import PlaylistEntry from './PlaylistEntry';
 import Player from './Player.js';
+import PlaylistSelector from './PlaylistSelector.js';
+import StartParty from './StartParty.js';
 import FlatButton from 'material-ui/FlatButton';
+import sampleData from '../lib/sampleData.js';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -11,21 +14,36 @@ class Playlist extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      songs: [],
+      currentUser: '',
+      userType: null,
+      partyCode: null,
+
+      songs: null,
       currentSong: '',
+      interval: null,
       deviceId: '',
-      currentUser: 'annonymous'
+      playlists: ''
     }
+
+
     this.getAllSongs = this.getAllSongs.bind(this);
     this.upVote = this.upVote.bind(this);
     this.downVote = this.downVote.bind(this);
     this.handlePlayButtonClick = this.handlePlayButtonClick.bind(this);
+    this.joinAsGuest = this.joinAsGuest.bind(this);
+    this.getDeviceId = this.getDeviceId.bind(this);
+    this.getHostInfo = this.getHostInfo.bind(this);
+    this.getSpotifyToken = this.getSpotifyToken.bind(this);
+    this.createPlaylist = this.createPlaylist.bind(this);
+    this.getExistingPlaylists = this.getExistingPlaylists.bind(this);
+    this.songEnded = this.songEnded.bind(this);
+
   }
 
   componentDidMount() {
     this.getSpotifyToken();
-    this.getDeviceId();
-    this.getAllSongs();
+    //this.getAllSongs();
+
   }
 
   getAllSongs() {
@@ -63,47 +81,92 @@ class Playlist extends React.Component {
   }
 
   getSpotifyToken() {
-    const getHashParams = () => {
-    let hashParams = {};
-    let e, r = /([^&;=]+)=?([^&;]*)/g;
-    let q = window.location.hash.substring(1);
-    while ( e = r.exec(q)) {
-      hashParams[e[1]] = decodeURIComponent(e[2]);
-    }
-      return hashParams;
-    }
+    axios.get(`/tokens`)
+    .then((response) => {
+      const access_token = response.data.access_token;
+      const refresh_token = response.data.refresh_token;
+      if (access_token) {
+        spotifyApi.setAccessToken(access_token);
+        this.setState({userType: 'host'});
+      }
+    })
+    .then((response) => {
+      if (this.state.userType === 'host') {
+        this.getDeviceId();
+      }
+    })
+    .then((response) =>{
+      if (this.state.userType === 'host') {
+        this.getHostInfo();
+      }
+    })
+    .catch((err) => {
+      console.error.bind(err);
+    })
+  }
 
-    const params = getHashParams();
-    const access_token = params.access_token;
-    const refresh_token = params.refresh_token;
+  generatePartyCode() {
 
-    spotifyApi.setAccessToken(access_token);
-    return access_token;
   }
 
   //get the active device for the host user who is signed in to Spotify
   getDeviceId() {
     spotifyApi.getMyDevices()
       .then((data) => {
-        this.setState({deviceId : data.devices[0].id})
+        this.setState({deviceId : data.devices[0].id});
       }, (err) =>{
         console.error(err);
       });
   }
 
-  playCurrentSong(deviceId, trackId) {
+  getHostInfo() {
+    axios.get('/hostInfo')
+    .then((response) => {
+      this.setState({currentUser : response.data.id});
+    })
+  }
+
+  playCurrentSong(deviceId, trackId, duration) {
     spotifyApi.play({
       device_id: deviceId,
       uris: ['spotify:track:' + trackId]
     });
+    console.log('play for duration:', duration);
+    if (this.state.interval) {
+      clearInterval(this.state.interval);
+    }
+    var interval = setTimeout(this.songEnded.bind(this), duration);
+    this.setState({interval: interval});
   };
+
+  songEnded() {
+    console.log('song ended');
+    this.handlePlayButtonClick();
+  }
+
+  createPlaylist() {
+    this.getAllSongs();
+  }
+
+  getExistingPlaylists() {
+    axios.get('/hostPlaylists')
+    .then((response) => {
+      console.log(response.data.items);
+      this.setState({playlists: response.data.items});
+    })
+  }
 
   handlePlayButtonClick () {
     const trackId = this.state.songs[0].link.split('track/')[1];
     const songId = this.state.songs[0]._id;
     this.setState({currentSong: this.state.songs[0]});
-    this.playCurrentSong(this.state.deviceId, trackId);
+    this.playCurrentSong(this.state.deviceId, trackId, this.state.songs[0].duration_ms);
     this.removeSong(songId);
+  }
+
+  joinAsGuest () {
+    this.setState({userType: 'guest'});
+    console.log('Joining as Guest');
   }
 
   removeSong(songId) {
@@ -117,44 +180,24 @@ class Playlist extends React.Component {
   }
 
   render() {
-    const playerStyle = {
-      display: 'inline-block',
-      width: '50%',
-      verticalAlign: 'top',
-      textAlign: 'center',
-      position: 'fixed'
-    }
-    const playListStyle = {
-      display: 'inline-block',
-      width:'50%',
-      float: 'right'
-    }
-    const playButtonStyle = {
-      width: '100%',
-      margin: '16px',
-      textAlign: 'center'
+    var toBeRendered = () => {
+      if (this.state.userType === null) {
+        return (<StartParty joinAsGuest={this.joinAsGuest}/>);
+      }
+      if (this.state.userType === 'host') {
+        return (
+          <HostDashboard currentUser={this.state.currentUser} partyCode={this.state.partyCode} songs={this.state.songs} playlists={this.state.playlists} currentSong={this.state.currentSong} createPlaylist={this.createPlaylist} getExistingPlaylists={this.getExistingPlaylists} handlePlayButtonClick={this.handlePlayButtonClick} upVote={this.upvote} downVote={this.downVote} />
+        );
+      }
+      if (this.state.userType === 'guest') {
+        return (
+          <GuestDashboard currentSong={this.state.currentSong} songs={this.state.songs} handlePlayButtonClick={this.handlePlayButtonClick} upVote={this.upvote} downVote={this.downVote}/>
+        )
+      }
     }
       return (
         <div>
-          {this.state.deviceId &&
-          <div style={playButtonStyle}>
-            <FlatButton onClick={this.handlePlayButtonClick} label="Play top song" primary={true} />
-          </div>
-          }
-          <div>
-            <div style={playerStyle}>
-            {this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
-            </div>
-            <div style={playListStyle} >
-          {
-            this.state.songs && this.state.songs.map((song, i) => {
-              return (
-                <PlaylistEntry index={i+1} downVote={this.downVote} handlePlay={this.handlePlayButtonClick} upVote={this.upVote} Song={song} key={i} />
-              )
-            })
-          }
-            </div>
-          </div>
+        {toBeRendered()}
         </div>
       )
   }

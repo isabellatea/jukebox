@@ -1,0 +1,57 @@
+.playerStyle {
+  display: 'inline-block';
+  width: '50%';
+  vertical-align: 'top';
+  text-align: 'center';
+  position: 'fixed';
+}
+
+.playListStyle {
+  display: 'inline-block';
+  width:'50%';
+  float: 'right'
+}
+
+.playButtonStyle {
+  width: '100%';
+  margin: '16px';
+  text-align: 'center';
+}
+
+.cardStyle {
+  display: 'block';
+  margin: '40px';
+  width: '250px';
+  margin: '15px';
+  transition-duration: '0.3s';
+  float:'left';
+  padding: '2px';
+}
+.search {
+  text-align: 'center';
+  width: '100%';
+  height: '100%';
+}
+
+.search .inside {
+  width: '30%';
+  display: 'inline-block';
+}
+
+.containerStyle {
+  height: '300px';
+}
+
+.divStyle {
+  text-align: 'center';
+}
+
+.buttonStyle {
+  margin: '5px';
+}
+
+.indexStyle {
+  position: 'relative';
+  top: '-20px';
+  left: '95px';
+}

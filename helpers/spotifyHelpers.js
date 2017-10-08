@@ -63,7 +63,7 @@ exports.handleHostLogin = (req, res) => {
       response_type: 'code',
       client_id: credentials.client_id,
       scope: scope,
-      redirect_uri: credentials.redirect_uri + '/callback',
+      redirect_uri: credentials.redirect_uri + '/callback/',
       state: state
     }));
 };
@@ -76,7 +76,7 @@ exports.redirectAfterLogin = (req, res) => {
     url: 'https://accounts.spotify.com/api/token',
     form: {
       code: code,
-      redirect_uri: credentials.redirect_uri + '/callback',
+      redirect_uri: credentials.redirect_uri + '/callback/',
       grant_type: 'authorization_code'
     },
     headers: {
@@ -92,12 +92,16 @@ exports.redirectAfterLogin = (req, res) => {
       const access_token = body.access_token;
       const refresh_token = body.refresh_token;
 
+      exports.tokens.access_token = body.access_token;
+      exports.tokens.refresh_token = body.refresh_token;
+
       //redirect host user back to playlist page and pass token to browser
-      res.redirect(credentials.redirect_uri + '#' +
-        querystring.stringify({
-          access_token: access_token,
-          refresh_token: refresh_token
-        }));
+      // res.redirect(credentials.redirect_uri +'#' +
+      //   querystring.stringify({
+      //     access_token: access_token,
+      //     refresh_token: refresh_token
+      //   }));
+            res.redirect(credentials.redirect_uri);
     } else {
       res.redirect('/#' +
         querystring.stringify({
@@ -106,3 +110,39 @@ exports.redirectAfterLogin = (req, res) => {
     }
   });
 };
+
+exports.getHostInfo = (req, res) => {
+  const settings = {
+    url: 'https://api.spotify.com/v1/me',
+    headers: {
+      'Authorization': 'Bearer ' + exports.tokens.access_token
+    }
+  }
+
+  request.get(settings, function(error, response, body) {
+    if (!error) {
+      res.send(body);
+    }
+  })
+};
+
+exports.getHostPlaylists = (req, res) => {
+  const settings = {
+    url: 'https://api.spotify.com/v1/me/playlists',
+    headers: {
+      'Authorization': 'Bearer ' + exports.tokens.access_token
+    }
+  }
+
+  request.get(settings, function(error, response, body) {
+    if (!error) {
+      res.send(body);
+    }
+  })
+
+}
+
+exports.tokens = {
+  access_token : null,
+  refresh_token : null
+}

@@ -1,4 +1,4 @@
-const sampleData = 
+const sampleData =
 {
   "tracks" : {
     "href" : "https://api.spotify.com/v1/search?query=purple+rain&type=track&market=US&offset=0&limit=10",
@@ -39,7 +39,7 @@ const sampleData =
         "name" : "Purple Rain",
         "type" : "album",
         "uri" : "spotify:album:7nXJ5k4XgRj5OLg9m8V3zc"
-      },
+      }, //album
       "artists" : [ {
         "external_urls" : {
           "spotify" : "https://open.spotify.com/artist/5a2EaR3hamoenG9rDuVn8j"

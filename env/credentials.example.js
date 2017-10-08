@@ -1,4 +1,4 @@
-exports.client_id = 'CLIENT_ID';
-exports.client_secret ='CLIENT SECRET';
-exports.redirect_uri = 'REDIRECT_URI';
+exports.client_id = '';
+exports.client_secret ='';
+exports.redirect_uri = '';
 exports.prod = false;

@@ -32,7 +32,7 @@ class Navbar extends React.Component {
     return (
       <div>
         <AppBar
-          title="Quinces JukeBox"
+          title="Pizza JukeBox"
           style={navbarStyle}
           iconElementLeft={
             <IconButton
@@ -48,9 +48,11 @@ class Navbar extends React.Component {
           <MenuItem onClick={this.handleClose}><Link to="/">Playlist</Link></MenuItem>
           <MenuItem onClick={this.handleClose}><Link to="/search">Search</Link></MenuItem>
           <MenuItem onClick={this.handleClose}><Link to="/signup">Sign Up</Link></MenuItem>
-          <MenuItem onClick={this.handleClose}><a href="/hostLogin">Login as Host</a></MenuItem>
+          <MenuItem onClick={this.handleClose}><Link to="/hostLogin">Login as Host</Link></MenuItem>
+          <MenuItem onClick={this.handleClose}><Link to="/host">Host Dashboard</Link></MenuItem>
+          <MenuItem onClick={this.handleClose}><Link to="/guest">Guest Dashboard</Link></MenuItem>
         </Drawer>
-      </div>      
+      </div>
     )
   }
 }
