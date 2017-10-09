@@ -5,18 +5,14 @@ import PlaylistEntry from './PlaylistEntry';
 const Playlist = (props) => {
 
   return (
-      <div>
-      <p>SONGS: </p>
-      {console.log(props.songs)}
-          { props.songs.map((song) => {
-              return (
-                <PlaylistEntry downVote={props.downVote} handlePlay={props.handlePlayButtonClick} upVote={props.upVote} song={song}/>
-
-              )
-
-            })
-          }
-      </div>
+    <div>
+    <p>SONGS: </p>
+      { props.songs.map((song, i) => {
+        return (
+          <PlaylistEntry key={i} downVote={props.downVote} handlePlay={props.handlePlayButtonClick} upVote={props.upVote} song={song}/>
+        )})
+      }
+    </div>
   );
 }
 

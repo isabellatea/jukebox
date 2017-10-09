@@ -1,11 +1,19 @@
 import React from 'react';
+import PlaylistSelectorEntry from './PlaylistSelectorEntry';
 
 const PlaylistSelector = (props) => {
+  
+  const handlePlaylistSelection = () => {
+    console.log("Hi!!!");
+    // this.props.sendSelectedPlaylistToSpotifyPlayer(playlist)
+  }
+
   return (
     <div>
       { props.playlists.map((playlist, i) => {
               return (
-                <li>{playlist.name}</li>
+                <PlaylistSelectorEntry key={i} playlist={playlist} handleCurrentPlaylist={props.handleCurrentPlaylistClick} />
+                
               )
               })
             }
