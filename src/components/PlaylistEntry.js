@@ -1,69 +1,30 @@
 import React from 'react';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 const PlaylistEntry = (props) => {
   const handleUpVote = () => {
-    props.upVote(props.Song);
+    props.upVote(props.song);
   }
 
   const handleDownVote = () => {
-    props.downVote(props.Song);
+    props.downVote(props.song);
   }
 
   const handlePlayButtonClick = () => {
-    props.handlePlay(props.Song);
-  }
-
-  const cardStyle = {
-    display: 'block',
-    margin: '40px',
-    width: '250px',
-    margin: '15px',
-    transitionDuration: '0.3s',
-    float:'left',
-    padding: '2px'
-  }
-
-  const containerStyle = {
-    height: '300px'
-  }
-  const divStyle = {
-    textAlign: 'center'
-  }
-  const buttonStyle = {
-   margin: '5px'
-  }
-  const indexStyle = {
-    position: 'relative',
-    top: '-20px',
-    left: '95px'
+    props.handlePlay(props.song);
   }
 
   return (
-      <div>
-        <Card style={cardStyle}>
-        <FloatingActionButton style={indexStyle}>{props.index}</FloatingActionButton>
-          <CardMedia>
-            <img src={props.Song.image} alt="" />
-          </CardMedia>
-          <CardTitle title={props.Song.name} subtitle={props.Song.artist} />
-          <CardText>
-            Added by: {props.Song.userName}
-          </CardText>
-          <CardActions>
-            <div style={divStyle}>
-              <FloatingActionButton style={buttonStyle} onClick={handleUpVote} mini={true}>
-                +{props.Song.upVoteCount}
-              </FloatingActionButton>
-              <FloatingActionButton style={buttonStyle} onClick={handleDownVote} mini={true} secondary={true}>
-                -{props.Song.downVoteCount}
-              </FloatingActionButton>
-            </div>
-          </CardActions>
-      </Card>
+
+    <div>
+      <p>Song Title: {props.song.name} </p>
+      <p>Artist: {props.song.artist}</p>
+      <p>Added By: {props.song.userName}</p>
+      <p>Image: {props.song.image}</p>
+      <p>Downvote Count: {props.song.downVoteCount}<button onClick={handleDownVote}> - </button></p>
+      <p>Upvote Count: {props.song.upVoteCount}<button onClick={handleUpVote}> + </button></p>
     </div>
   )
 }
 
 export default PlaylistEntry;
+

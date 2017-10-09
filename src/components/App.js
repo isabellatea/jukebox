@@ -1,20 +1,17 @@
 import React from 'react';
+import Header from './Header';
+import Container from './Container';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import Navbar from './Navbar';
-import Container from './Container';
-import Banner from './Banner';
-import Header from './Header';
 
-const App =  (props) => {
+const App = (props) => {
   return (
     <div>
-    <Banner/>
-    <MuiThemeProvider>
-      <Navbar/>
-    </MuiThemeProvider>
-    <Container/>
-  </div>
+      <MuiThemeProvider>
+      <Header />
+      </MuiThemeProvider>
+      <Container />
+    </div>
   );
 }
 export default App;
