@@ -5,7 +5,7 @@ import PlaylistEntry from './PlaylistEntry';
 import Player from './Player.js';
 import PlaylistSelector from './PlaylistSelector.js';
 import StartParty from './StartParty.js';
-import FlatButton from 'material-ui/FlatButton';
+// import FlatButton from 'material-ui/FlatButton';
 import sampleData from '../lib/sampleData.js';
 import Playlist from './Playlist.js';
 
@@ -53,6 +53,7 @@ class Party extends React.Component {
       this.setState({
         songs: response.data
       })
+      console.log('songs:', this.state.songs);
     })
     .catch((err) => {
       console.error.bind(err);
@@ -82,14 +83,17 @@ class Party extends React.Component {
   }
 
   getSpotifyToken() {
+    console.log('getting token');
     axios.get(`/tokens`)
     .then((response) => {
       const access_token = response.data.access_token;
       const refresh_token = response.data.refresh_token;
+      console.log("1", response.data);
       if (access_token) {
         spotifyApi.setAccessToken(access_token);
         this.setState({userType: 'host'});
-        console.log(response.data);
+        console.log('2',response.data);
+        console.log('user:', this.state.userType);
       }
     })
     .then((response) => {
@@ -186,16 +190,17 @@ class Party extends React.Component {
       if (this.state.userType === null) {
         return (<StartParty joinAsGuest={this.joinAsGuest}/>);
       }
+      console.log("userType:", this.state.userType);
       if (this.state.userType === 'host') {
         return (
           <div>
-              <h2>HI {props.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
-              { !this.state.songs && <div><button onClick={this.createPlaylist}>Start a New Playlist</button></div>}
-              { !this.state.songs && <div><button onClick={this.getExistingPlaylists}>Choose an Existing Playlist</button></div>}
-              { this.state.playlists && <PlaylistSelector playlists={this.state.playlists}/>}
-              { this.state.songs && <div className='playButtonStyle'><button onClick={this.handlePlayButtonClick} primary={true}>Play top song</button></div> }
-              { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
-               { this.state.songs && <Playlist songs={this.state.songs}/> }
+            <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
+            { !this.state.songs && <div><button onClick={this.createPlaylist}>Start a New Playlist</button></div>}
+            { !this.state.songs && <div><button onClick={this.getExistingPlaylists}>Choose an Existing Playlist</button></div>}
+            { this.state.playlists && <PlaylistSelector playlists={this.state.playlists}/>}
+            { this.state.songs && <div className='playButtonStyle'><button onClick={this.handlePlayButtonClick}>Play top song</button></div> }
+            { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
+            { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} handlePlayButtonClick={this.handlePlayButtonClick}/> }
           </div>
         );
       }
@@ -203,9 +208,9 @@ class Party extends React.Component {
         return (
           <div>
             <div className='playerStyle'>
-            { props.currentSong && <Player trackId={props.currentSong.link.split('track/')[1]}/>}
+              { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
             </div>
-            { props.songs && <Playlist songs={this.state.songs}/> }
+            { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} handlePlayButtonClick={this.handlePlayButtonClick} /> }
           </div>
         )
       }

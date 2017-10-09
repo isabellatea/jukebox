@@ -185,6 +185,7 @@ app.post('/signup', (req, res) => {
 * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 app.get('/tokens', (req, res) => {
+  console.log('token', tokens);
   res.send(tokens);
 });
 

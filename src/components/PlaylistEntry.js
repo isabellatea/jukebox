@@ -1,46 +1,36 @@
 import React from 'react';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 const PlaylistEntry = (props) => {
   const handleUpVote = () => {
-    props.upVote(props.Song);
+    props.upVote(props.song);
   }
 
   const handleDownVote = () => {
-    props.downVote(props.Song);
+    props.downVote(props.song);
   }
 
   const handlePlayButtonClick = () => {
-    props.handlePlay(props.Song);
+    props.handlePlay(props.song);
   }
 
 
 
   return (
-      <div>
-        <Card style={cardStyle}>
-        <FloatingActionButton style={indexStyle}>{props.index}</FloatingActionButton>
-          <CardMedia>
-            <img src={props.Song.image} alt="" />
-          </CardMedia>
-          <CardTitle title={props.Song.name} subtitle={props.Song.artist} />
-          <CardText>
-            Added by: {props.Song.userName}
-          </CardText>
-          <CardActions>
-            <div style={divStyle}>
-              <FloatingActionButton style={buttonStyle} onClick={handleUpVote} mini={true}>
-                +{props.Song.upVoteCount}
-              </FloatingActionButton>
-              <FloatingActionButton style={buttonStyle} onClick={handleDownVote} mini={true} secondary={true}>
-                -{props.Song.downVoteCount}
-              </FloatingActionButton>
-            </div>
-          </CardActions>
-      </Card>
+
+    <div>
+      <p>Song Title: {props.song.name} </p>
+      <p>Artist: {props.song.artist}</p>
+      <p>Added By: {props.song.username}</p>
+      <p>Image: {props.song.image}</p>
+      <button onClick={handleUpVote}> + </button>
+      <button onClick={handleDownVote}> - </button>
+      <p>Downvote Count: {props.song.downVoteCount}</p>
+      <p>Upvote Count: {props.song.upVoteCount}</p>
+
+
     </div>
   )
 }
 
 export default PlaylistEntry;
+
