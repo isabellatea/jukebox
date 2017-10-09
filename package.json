@@ -1,6 +1,7 @@
 {
   "author": "",
   "dependencies": {
+    "@material/tabs": "^0.3.1",
     "axios": "^0.16.2",
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",

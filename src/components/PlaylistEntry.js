@@ -15,30 +15,7 @@ const PlaylistEntry = (props) => {
     props.handlePlay(props.Song);
   }
 
-  const cardStyle = {
-    display: 'block',
-    margin: '40px',
-    width: '250px',
-    margin: '15px',
-    transitionDuration: '0.3s',
-    float:'left',
-    padding: '2px'
-  }
 
-  const containerStyle = {
-    height: '300px'
-  }
-  const divStyle = {
-    textAlign: 'center'
-  }
-  const buttonStyle = {
-   margin: '5px'
-  }
-  const indexStyle = {
-    position: 'relative',
-    top: '-20px',
-    left: '95px'
-  }
 
   return (
       <div>
