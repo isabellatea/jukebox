@@ -15,13 +15,14 @@ const PlaylistEntry = (props) => {
 
   return (
 
-    <div>
+    <div className='playlistEntry'>
       <p>Song Title: {props.song.name} </p>
       <p>Artist: {props.song.artist}</p>
       <p>Added By: {props.song.userName}</p>
       <p>Image: {props.song.image}</p>
       <p>Downvote Count: {props.song.downVoteCount}<button onClick={handleDownVote}> - </button></p>
       <p>Upvote Count: {props.song.upVoteCount}<button onClick={handleUpVote}> + </button></p>
+      <hr />
     </div>
   )
 }
