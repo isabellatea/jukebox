@@ -4,7 +4,7 @@ import IconButton from 'material-ui/IconButton';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
-
+import Search from './Search';
 import { Link } from 'react-router-dom';
 
 class Header extends React.Component {
@@ -35,7 +35,7 @@ class Header extends React.Component {
         <span className="title">Pizza JukeBox</span>
           <ul>
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/search">Add a Song</Link></li>
+          <li><Link to="/search">Search</Link></li>
           <li><Link to="/">Leave Party</Link></li>
           </ul>
         </div>

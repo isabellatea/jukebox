@@ -76,8 +76,13 @@ app.get('/hostPlaylists', (req, res) => {
   spotifyHelpers.getHostPlaylists(req, res);
 });
 
+// app.get('/currentlyPlaying', (req, res) => {
+//   spotifyHelpers.currentPlaying(req, res);
+// });
 
-
+// app.get('/playlistSongs', (req, res) => {
+//   spotifyHelpers.getPlaylistSongs(req, rest);
+// })
 
 // Host Authentication
 app.get('/hostLogin', (req, res) => {

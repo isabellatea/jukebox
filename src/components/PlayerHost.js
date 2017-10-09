@@ -1,14 +1,14 @@
 import React from 'react';
 
-const TestPlayerWithPlaylist = (props) => {
+const PlayerHost = (props) => {
   return (
     <div>
-     <iframe src={'https://open.spotify.com/embed/user/' + props.currentUser + '/playlist/' + props.currentPlaylist} width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
+     <iframe src={'https://open.spotify.com/embed/user/' + props.currentUser + '/playlist/' + props.currentPlaylist} width="300" height="380"></iframe>
     </div>
   )
 }
 
-export default TestPlayerWithPlaylist;
+export default PlayerHost;
 
 
 

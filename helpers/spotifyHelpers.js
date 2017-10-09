@@ -139,8 +139,40 @@ exports.getHostPlaylists = (req, res) => {
       res.send(body);
     }
   })
-
 }
+
+// exports.currentlyPlaying = (req, res) => {
+//   const settings = {
+//     url: 'https://api.spotify.com/v1/me/player/currently-playing',
+//     headers: {
+//       'Authorization': 'Bearer ' + exports.tokens.access_token
+//     }
+//   }
+
+//   request.get(settings, function(error, response, body) {
+//     if (!error) {
+//       res.send(body);
+//     }
+//   })
+// }
+
+
+
+// exports.getPlaylistSongs = (currentUser, currentPlaylist) => {
+//   const settings = {
+//     url: {'https://api.spotify.com/v1/users/' + currentUser + '/playlists/' + currentPlaylist + '/tracks'},
+//     headers: {
+//       'Authorization': 'Bearer ' + exports.tokens.access_token
+//     }
+//   }
+
+//   request.get(settings, function(error, response, body) {
+//     if(!error) {
+//       res.send(body);
+//     }
+//   })
+// }
+
 
 exports.tokens = {
   access_token : null,
