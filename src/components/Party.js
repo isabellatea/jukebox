@@ -8,6 +8,7 @@ import StartParty from './StartParty.js';
 // import FlatButton from 'material-ui/FlatButton';
 import sampleData from '../lib/sampleData.js';
 import Playlist from './Playlist.js';
+import TestPlayerWithPlaylist from './TestPlayerWithPlaylist';
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -21,6 +22,7 @@ class Party extends React.Component {
 
       songs: null,
       currentSong: '',
+      currentPlaylist: '',
       interval: null,
       deviceId: '',
       playlists: ''
@@ -38,6 +40,7 @@ class Party extends React.Component {
     this.createPlaylist = this.createPlaylist.bind(this);
     this.getExistingPlaylists = this.getExistingPlaylists.bind(this);
     this.songEnded = this.songEnded.bind(this);
+    this.handleCurrentPlaylistClick = this.handleCurrentPlaylistClick.bind(this);
 
   }
 
@@ -53,7 +56,6 @@ class Party extends React.Component {
       this.setState({
         songs: response.data
       })
-      console.log('songs:', this.state.songs);
     })
     .catch((err) => {
       console.error.bind(err);
@@ -83,17 +85,13 @@ class Party extends React.Component {
   }
 
   getSpotifyToken() {
-    console.log('getting token');
     axios.get(`/tokens`)
     .then((response) => {
       const access_token = response.data.access_token;
       const refresh_token = response.data.refresh_token;
-      console.log("1", response.data);
       if (access_token) {
         spotifyApi.setAccessToken(access_token);
         this.setState({userType: 'host'});
-        console.log('2',response.data);
-        console.log('user:', this.state.userType);
       }
     })
     .then((response) => {
@@ -137,7 +135,6 @@ class Party extends React.Component {
       device_id: deviceId,
       uris: ['spotify:track:' + trackId]
     });
-    console.log('play for duration:', duration);
     if (this.state.interval) {
       clearInterval(this.state.interval);
     }
@@ -146,7 +143,6 @@ class Party extends React.Component {
   };
 
   songEnded() {
-    console.log('song ended');
     this.handlePlayButtonClick();
   }
 
@@ -185,19 +181,36 @@ class Party extends React.Component {
     })
   }
 
+  handleCurrentPlaylistClick(playlist) {
+    console.log("Clicked PlaylistID:", playlist.id);
+    this.setState({currentPlaylist: playlist.id})
+  }
+
+
+
   render() {
     var toBeRendered = () => {
       if (this.state.userType === null) {
         return (<StartParty joinAsGuest={this.joinAsGuest}/>);
       }
-      console.log("userType:", this.state.userType);
       if (this.state.userType === 'host') {
         return (
           <div>
             <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
+
             { !this.state.songs && <div><button onClick={this.createPlaylist}>Start a New Playlist</button></div>}
             { !this.state.songs && <div><button onClick={this.getExistingPlaylists}>Choose an Existing Playlist</button></div>}
-            { this.state.playlists && <PlaylistSelector playlists={this.state.playlists}/>}
+
+            {this.state.currentUser && this.state.currentPlaylist && 
+            <div className='hostPlayer'>
+              <TestPlayerWithPlaylist currentUser={this.state.currentUser} currentPlaylist={this.state.currentPlaylist}/>
+            </div>
+            }
+            
+            <div className='playlist'>
+              { this.state.playlists && <PlaylistSelector playlists={this.state.playlists} handleCurrentPlaylistClick={this.handleCurrentPlaylistClick} />}
+            </div>
+
             { this.state.songs && <div className='playButtonStyle'><button onClick={this.handlePlayButtonClick}>Play top song</button></div> }
             { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
             { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} handlePlayButtonClick={this.handlePlayButtonClick}/> }

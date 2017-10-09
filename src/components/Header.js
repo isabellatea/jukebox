@@ -35,7 +35,8 @@ class Header extends React.Component {
         <span className="title">Pizza JukeBox</span>
           <ul>
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/search">Search</Link></li>
+          <li><Link to="/search">Add a Song</Link></li>
+          <li><Link to="/">Leave Party</Link></li>
           </ul>
         </div>
       </div>

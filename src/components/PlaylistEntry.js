@@ -13,21 +13,15 @@ const PlaylistEntry = (props) => {
     props.handlePlay(props.song);
   }
 
-
-
   return (
 
     <div>
       <p>Song Title: {props.song.name} </p>
       <p>Artist: {props.song.artist}</p>
-      <p>Added By: {props.song.username}</p>
+      <p>Added By: {props.song.userName}</p>
       <p>Image: {props.song.image}</p>
-      <button onClick={handleUpVote}> + </button>
-      <button onClick={handleDownVote}> - </button>
-      <p>Downvote Count: {props.song.downVoteCount}</p>
-      <p>Upvote Count: {props.song.upVoteCount}</p>
-
-
+      <p>Downvote Count: {props.song.downVoteCount}<button onClick={handleDownVote}> - </button></p>
+      <p>Upvote Count: {props.song.upVoteCount}<button onClick={handleUpVote}> + </button></p>
     </div>
   )
 }
