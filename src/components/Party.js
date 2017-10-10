@@ -242,8 +242,6 @@ class Party extends React.Component {
               { this.state.playlists && <PlaylistSelector playlists={this.state.playlists} handleCurrentPlaylistClick={this.handleCurrentPlaylistClick} />}
             </div>
 
-            { this.state.songs && <div className='playButtonStyle'><button onClick={this.handlePlayButtonClick}>Play top song</button></div> }
-            { this.state.currentSong && <PlayerGuest trackId={this.state.currentSong.link.split('track/')[1]}/>}
             { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} handlePlayButtonClick={this.handlePlayButtonClick}/> }
           </div>
         );
@@ -273,3 +271,7 @@ class Party extends React.Component {
 
 
 export default Party;
+
+
+            // { this.state.songs && <div className='playButtonStyle'><button onClick={this.handlePlayButtonClick}>Play top song</button></div> }
+            // { this.state.currentSong && <PlayerGuest trackId={this.state.currentSong.link.split('track/')[1]}/>}

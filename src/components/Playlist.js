@@ -8,7 +8,7 @@ const Playlist = (props) => {
     <p>SONGS: </p>
       { props.songs.map((song, i) => {
         return (
-          <PlaylistEntry key={i} downVote={props.downVote} handlePlay={props.handlePlayButtonClick} upVote={props.upVote} song={song}/>
+          <PlaylistEntry key={i} position={i} downVote={props.downVote} handlePlay={props.handlePlayButtonClick} upVote={props.upVote} song={song}/>
         )})
       }
     </div>
