@@ -40,8 +40,6 @@ ul {
   display: inline-block;
 }
 
-
-
 .playerStyle {
   display: 'inline-block';
   width: '50%';
@@ -56,7 +54,25 @@ ul {
   float: 'right'
 }
 
-.playlistEntry {
+.playlistSelectorEntry {
+   border-top: 1px solid #96d1f8;
+   background: #65a9d7;
+   padding: 7px 14px;
+   -webkit-border-radius: 8px;
+   -moz-border-radius: 8px;
+   border-radius: 8px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 14px;
+   font-family: Georgia, serif;
+   text-decoration: none;
+   vertical-align: middle;
+   margin: 5px;
+   display: inline-block;
+
 }
 
 
@@ -75,6 +91,7 @@ ul {
   float:'left';
   padding: '2px';
 }
+
 .search {
   border-style: solid;
   border-color: #000000;

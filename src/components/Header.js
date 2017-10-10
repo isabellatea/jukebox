@@ -1,11 +1,7 @@
 import React from 'react';
-import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
-import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
 import Search from './Search';
 import { Link } from 'react-router-dom';
+
 
 class Header extends React.Component {
   constructor(props) {
@@ -43,5 +39,6 @@ class Header extends React.Component {
     )
   }
 }
+
 
 export default Header;

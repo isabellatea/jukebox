@@ -1,13 +1,12 @@
 import React from 'react';
 import PlaylistSelectorEntry from './PlaylistSelectorEntry';
 
-const PlaylistSelector = (props) => {
-  
+
+const PlaylistSelector = (props) => {  
   const handlePlaylistSelection = () => {
     console.log("Hi!!!");
     // this.props.sendSelectedPlaylistToSpotifyPlayer(playlist)
   }
-
   return (
     <div>
       { props.playlists.map((playlist, i) => {
@@ -17,10 +16,9 @@ const PlaylistSelector = (props) => {
               )
               })
             }
-
-
     </div>
   )
 }
+
 
 export default PlaylistSelector;

@@ -158,20 +158,21 @@ exports.getHostPlaylists = (req, res) => {
 
 
 
-// exports.getPlaylistSongs = (currentUser, currentPlaylist) => {
-//   const settings = {
-//     url: {'https://api.spotify.com/v1/users/' + currentUser + '/playlists/' + currentPlaylist + '/tracks'},
-//     headers: {
-//       'Authorization': 'Bearer ' + exports.tokens.access_token
-//     }
-//   }
+exports.getPlaylistSongs = (req, res) => {
+  console.log("Req:", req);
+  const settings = {
+    url: 'https://api.spotify.com/v1/users/' + req.currentUser + '/playlists/' + req.currentPlaylist + '/tracks',
+    headers: {
+      'Authorization': 'Bearer ' + exports.tokens.access_token
+    }
+  }
 
-//   request.get(settings, function(error, response, body) {
-//     if(!error) {
-//       res.send(body);
-//     }
-//   })
-// }
+  request.get(settings, function(error, response, body) {
+    if(!error) {
+      res.send(body);
+    }
+  })
+}
 
 
 exports.tokens = {

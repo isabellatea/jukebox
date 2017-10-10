@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const Player = (props) => {
   return (
     <div>
@@ -7,5 +8,6 @@ const Player = (props) => {
     </div>
   )
 }
+
 
 export default Player;

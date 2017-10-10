@@ -80,9 +80,9 @@ app.get('/hostPlaylists', (req, res) => {
 //   spotifyHelpers.currentPlaying(req, res);
 // });
 
-// app.get('/playlistSongs', (req, res) => {
-//   spotifyHelpers.getPlaylistSongs(req, rest);
-// })
+app.get('/playlistSongs', (req, res) => {
+  spotifyHelpers.getPlaylistSongs(req.query, res);
+})
 
 // Host Authentication
 app.get('/hostLogin', (req, res) => {
