@@ -3,7 +3,6 @@ import PlaylistEntry from './PlaylistEntry';
 
 
 const Playlist = (props) => {
-
   return (
     <div>
     <p>SONGS: </p>
@@ -15,5 +14,6 @@ const Playlist = (props) => {
     </div>
   );
 }
+
 
 export default Playlist;

@@ -12,6 +12,7 @@ import Search from './Search.js';
 
 const spotifyApi = new SpotifyWebApi();
 
+
 class Party extends React.Component {
   constructor(props) {
     super(props);
@@ -36,11 +37,11 @@ class Party extends React.Component {
     this.getDeviceId = this.getDeviceId.bind(this);
     this.getHostInfo = this.getHostInfo.bind(this);
     this.getSpotifyToken = this.getSpotifyToken.bind(this);
-    this.createPlaylist = this.createPlaylist.bind(this);
+    this.createNewPlaylist = this.createNewPlaylist.bind(this);
     this.getExistingPlaylists = this.getExistingPlaylists.bind(this);
     this.handleCurrentPlaylistClick = this.handleCurrentPlaylistClick.bind(this);
     // this.songEnded = this.songEnded.bind(this);
-    // this.getPlaylistSongs = this.getPlaylistSongs.bind(this);
+    this.getPlaylistSongs = this.getPlaylistSongs.bind(this);
 
   }
 
@@ -61,6 +62,7 @@ class Party extends React.Component {
     })
   }
 
+  //Should get info about the currently playing song, to be displayed on guest dashboard
   // getCurrentSong() {
   //   axios.get(`/currentlyPlaying`)
   //   .then((response) => {
@@ -119,9 +121,8 @@ class Party extends React.Component {
       console.error.bind(err);
     })
   }
-
+  //Should generate a random party code that will refer to the current session for host/users
   generatePartyCode() {
-
   }
 
   //get the active device for the host user who is signed in to Spotify
@@ -157,8 +158,8 @@ class Party extends React.Component {
     this.handlePlayButtonClick();
   }
 
-  createPlaylist() {
-    // this.getAllSongs();
+  createNewPlaylist() {
+    this.getAllSongs();
   }
 
   getExistingPlaylists() {
@@ -169,17 +170,20 @@ class Party extends React.Component {
     })
   }
 
-  // getPlaylistSongs() {
-  //   axios.get('/playlistSongs', {
-  //       currentUser: this.state.currentUser,
-  //       currentPlaylist: this.state.currentPlaylist
-  //     }
-  //   )
-  //   .then((response) => {
-  //     console.log("Playlist Songs: ", response.data.items);
-  //     this.setState({songs: response.data.items})
-  //   })
-  // }
+  // Should GET songs from selected Spotify playlist, to be rendered on Playlist via PlaylistEntry
+  getPlaylistSongs() {
+    console.log('before ajax', this.state.currentPlaylist);
+    axios.get('/playlistSongs', {
+      params: { 
+        currentUser: this.state.currentUser,
+        currentPlaylist: this.state.currentPlaylist
+      }
+    })
+    .then((response) => {
+      // console.log("Playlist Songs: ", response.data.items);
+      this.setState({songs: response.data.items})
+    })
+  }
 
   handlePlayButtonClick () {
     const trackId = this.state.songs[0].link.split('track/')[1];
@@ -207,8 +211,9 @@ class Party extends React.Component {
 
   handleCurrentPlaylistClick(playlist) {
     console.log("Clicked PlaylistID:", playlist.id);
-    this.setState({currentPlaylist: playlist.id})
-    // this.getPlaylistSongs();
+    this.setState({currentPlaylist: playlist.id}, () => {
+      this.getPlaylistSongs();
+    });
 
   }
 
@@ -224,7 +229,7 @@ class Party extends React.Component {
           <div>
             <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
 
-            { !this.state.songs && <div><button onClick={this.createPlaylist}>Start a New Playlist</button></div>}
+            { !this.state.songs && <div><button onClick={this.createNewPlaylist}>Start a New Playlist</button></div>}
             { !this.state.songs && <div><button onClick={this.getExistingPlaylists}>Choose an Existing Playlist</button></div>}
 
             {this.state.currentUser && this.state.currentPlaylist && 
@@ -265,5 +270,6 @@ class Party extends React.Component {
       )
   }
 }
+
 
 export default Party;

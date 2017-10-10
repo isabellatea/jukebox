@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const PlayerHost = (props) => {
   return (
     <div>
@@ -7,6 +8,7 @@ const PlayerHost = (props) => {
     </div>
   )
 }
+
 
 export default PlayerHost;
 

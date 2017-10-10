@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-// import FlatButton from 'material-ui/FlatButton';
+
 
 const StartParty = (props) => {
 
   return (
-
       <div>
         <div className="hostPartyButton">
           <a href="/hostLogin">Host a Party</a>
@@ -20,9 +19,8 @@ const StartParty = (props) => {
           </form>
         </div>
       </div>
-
-
   )
 }
+
 
 export default StartParty;

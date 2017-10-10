@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const PlaylistEntry = (props) => {
   const handleUpVote = () => {
     props.upVote(props.song);
@@ -14,7 +15,6 @@ const PlaylistEntry = (props) => {
   }
 
   return (
-
     <div className='playlistEntry'>
       <p>Song Title: {props.song.name} </p>
       <p>Artist: {props.song.artist}</p>
@@ -26,6 +26,7 @@ const PlaylistEntry = (props) => {
     </div>
   )
 }
+
 
 export default PlaylistEntry;
 

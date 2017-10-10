@@ -1,7 +1,4 @@
 import React from 'react';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 
 
 const SearchEntry = (props) => {
@@ -22,5 +19,6 @@ const SearchEntry = (props) => {
     </div>
   )
 }
+
 
 export default SearchEntry;
