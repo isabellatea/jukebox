@@ -1,23 +1,131 @@
+/*Global*/
+* {
+  font-family: helvetica;
+}
+
+.app {
+  max-width: 1300px;
+  margin: auto;
+}
+
+
+
+/*Nav Bar*/
 .header {
-  width: 100%;
-  background: #00b8d4;
-  color: white;
-  font-family: 'verdana';
-  margin: 5px;
-  padding: 10px;
+    background-color: #333;
+    padding: 10px;
 }
 
-ul {
-  list-style: none;
-  display: inline-block;
-}
-
-.header li {
-  font-size: 23px;
+.header-title {
+  vertical-align: middle;
+  margin: auto;
   display: inline-block;
   margin-right: 10px;
-
 }
+
+.header-item {
+    display: inline-block;
+    text-align: center;
+    padding: 14px 16px;
+    transform: translateY(5px);
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.header-item a {
+    color: white;
+    text-decoration: none;
+}
+
+.header-item:hover {
+    background-image: url('http://i65.tinypic.com/mu766r.gif');
+}
+
+.header-item a:hover {
+    color: #000;
+}
+
+
+
+
+/*Container*/
+.container {
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  margin: auto;
+  width: 100%;
+  height: 850px;
+  background-image: url('http://i66.tinypic.com/sza7hj.png');
+  background-repeat: no-repeat;
+}
+
+.container-inner {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  padding: 30px;
+  z-index: 2;
+}
+
+
+
+
+/*Start Party Landing Page*/
+.startPartyBoxes {
+  width: 550px;
+  height: 80px;
+  background-image: url('https://i.pinimg.com/736x/43/52/fa/4352fadc7fb8bd9cbbb979045b9bce74--background-geometric-background-designs.jpg');
+  padding: 30px;
+  color: #000;
+  box-shadow: 5px 5px 5px lightgrey;
+  margin: 0 auto;
+  margin-top: 30px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.startPartyTitles {
+  -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,0.55);
+  -moz-box-shadow: 0px 0px 3px rgba(0,0,0,0.55);
+  box-shadow: 0px 0px 3px rgba(0,0,0,0.55);
+  background: #2d92cf;
+  color: white;
+  padding: 10px 20px;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#e6c954), to(#ceb44c));
+  background-image: -moz-linear-gradient(top,#33acfc,#3198dd);
+  font-size: 190%;
+  text-align: center;
+  /*text-shadow: lightgray 0 -1px 1px;*/
+  margin-bottom: -35px;
+  font-weight: bold;
+  float: right;
+  -webkit-transform: rotate(-15deg) scale(1) translateX(37%) translateY(-15%);
+          transform: rotate(-3deg) scale(1.5) translateX(-15%) translateY(50%);
+}
+
+.startPartyTitles:hover {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ceb44c), to(#e6c954));
+  background-color: #fff;
+}
+
+.partyCodeText {
+  font-weight: bold;
+  margin-right: 3px;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*Unknown*/
 
 .title {
   display: inline-block;
@@ -26,19 +134,6 @@ ul {
   font-weight: bold;
 }
 
-.landingPageButtons {
-  margin: 0 auto;
-}
-
-.hostPartyButton, .joinPartyButton{
-  border-style: solid;
-  border-color: #000000;
-  border-width: 5px;
-  height: 150px;
-  width: 300px;
-  text-align: center;
-  display: inline-block;
-}
 
 .playerStyle {
   display: 'inline-block';
@@ -147,3 +242,7 @@ ul {
   top: '-20px';
   left: '95px';
 }
+
+
+
+

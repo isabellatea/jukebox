@@ -3,6 +3,7 @@ import Search from './Search';
 import { Link } from 'react-router-dom';
 
 
+
 class Header extends React.Component {
   constructor(props) {
     super(props)
@@ -28,12 +29,12 @@ class Header extends React.Component {
     return (
       <div>
         <div className="header">
-        <span className="title">Pizza JukeBox</span>
-          <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/search">Search</Link></li>
-          <li><Link to="/">Leave Party</Link></li>
-          </ul>
+            <img src='http://i67.tinypic.com/335ej5e.png' alt='pizza jukebox' className="header-title" />
+            <span className="header-item"><Link to="/">Home</Link></span>
+            <span className="header-item"><Link to="/search">Search</Link></span>
+            <span className="header-item"><Link to="/">Leave Party</Link></span>
+
+
         </div>
       </div>
     )
@@ -42,3 +43,11 @@ class Header extends React.Component {
 
 
 export default Header;
+
+
+
+            // <ul>
+            // <li className="header-item"><Link to="/">Home</Link></li>
+            // <li className="header-item"><Link to="/search">Search</Link></li>
+            // <li className="header-item"><Link to="/">Leave Party</Link></li>
+            // </ul>

@@ -11,11 +11,16 @@ import '../css/styles.css';
 class Container extends React.Component {
   render() {
     return (
-      <Switch>
-        <Route exact path='/' component={Party} />
-        <Route exact path='/signup' component={Signup} />
-        <Route exact path='/search' component={Search} />
-      </Switch>
+      <div className='container'>
+
+          <div className="container-inner">
+            <Switch>
+              <Route exact path='/' component={Party} />
+              <Route exact path='/signup' component={Signup} />
+              <Route exact path='/search' component={Search} />
+            </Switch>
+          </div>
+        </div>
     )
   }
 }
