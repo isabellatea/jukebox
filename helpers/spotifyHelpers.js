@@ -54,7 +54,7 @@ const generateRandomString = (length) => {
 exports.handleHostLogin = (req, res) => {
   console.log(credentials.redirect_uri)
   const state = generateRandomString(16);
-  const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state';
+  const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state playlist-read-private playlist-read-collaborative playlist-modify-public user-library-read user-read-currently-playing';
 
   res.cookie('spotify_auth_state', state);
 
@@ -141,20 +141,20 @@ exports.getHostPlaylists = (req, res) => {
   })
 }
 
-// exports.currentlyPlaying = (req, res) => {
-//   const settings = {
-//     url: 'https://api.spotify.com/v1/me/player/currently-playing',
-//     headers: {
-//       'Authorization': 'Bearer ' + exports.tokens.access_token
-//     }
-//   }
+exports.currentlyPlaying = (req, res) => {
+  const settings = {
+    url: 'https://api.spotify.com/v1/me/player/currently-playing',
+    headers: {
+      'Authorization': 'Bearer ' + exports.tokens.access_token
+    }
+  }
 
-//   request.get(settings, function(error, response, body) {
-//     if (!error) {
-//       res.send(body);
-//     }
-//   })
-// }
+  request.get(settings, function(error, response, body) {
+    if (!error) {
+      res.send(body);
+    }
+  })
+}
 
 
 
@@ -173,6 +173,28 @@ exports.getPlaylistSongs = (req, res) => {
     }
   })
 }
+
+
+exports.createNewPlaylist = (req, res) => {
+  console.log('Req:', req)
+  const settings = {
+    url: 'https://api.spotify.com/v1/users/' + req.currentUser + '/playlists/',
+    body: JSON.stringify({
+      name: "testPlaylist",
+      public: true
+    }),
+    headers: {
+      'Authorization': 'Bearer ' + exports.tokens.access_token
+    }
+  }
+
+  request.post(settings, function(error, response, body) {
+    if(!error) {
+      res.send(body);
+    }
+  })
+}
+
 
 
 exports.tokens = {

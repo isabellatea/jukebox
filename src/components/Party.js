@@ -42,7 +42,10 @@ class Party extends React.Component {
     this.handleCurrentPlaylistClick = this.handleCurrentPlaylistClick.bind(this);
     // this.songEnded = this.songEnded.bind(this);
     this.getPlaylistSongs = this.getPlaylistSongs.bind(this);
-
+    this.createNewPlaylist = this.createNewPlaylist.bind(this);
+    this.getCurrentSong = this.getCurrentSong.bind(this);
+    this.switchToGuest = this.switchToGuest.bind(this);
+    this.switchToHost = this.switchToHost.bind(this);
   }
 
   componentDidMount() {
@@ -63,17 +66,18 @@ class Party extends React.Component {
   }
 
   //Should get info about the currently playing song, to be displayed on guest dashboard
-  // getCurrentSong() {
-  //   axios.get(`/currentlyPlaying`)
-  //   .then((response) => {
-  //     this.setState({
-  //       currentSong: response.data
-  //     })
-  //   })
-  //   .catch((err) => {
-  //     console.error.bind(err);
-  //   })
-  // }
+  getCurrentSong() {
+    axios.get('/currentlyPlaying')
+    .then((response) => {
+      console.log("Currently Playing:",response.data);
+      this.setState({
+        currentSong: response.data.item.id
+      })
+    })
+    .catch((err) => {
+      console.error.bind(err);
+    })
+  }
 
   upVote(song) {
     song.vote = 1;
@@ -123,6 +127,7 @@ class Party extends React.Component {
   }
   //Should generate a random party code that will refer to the current session for host/users
   generatePartyCode() {
+    //generateRandomString(7) after export - Steve
   }
 
   //get the active device for the host user who is signed in to Spotify
@@ -159,7 +164,18 @@ class Party extends React.Component {
   }
 
   createNewPlaylist() {
-    this.getAllSongs();
+    axios.post('/createNewPlaylist', {
+      params: { 
+        currentUser: this.state.currentUser,
+        name: 'myNewPlaylist',
+        public: true
+      }
+    })
+    .then((response) => {
+      console.log("Making a new Playlist", response);
+      console.log("ID Number:", response.location)
+  //     this.setState({currentPlaylist: response.id}) //need to pull the playlist ID
+    })
   }
 
   getExistingPlaylists() {
@@ -182,6 +198,7 @@ class Party extends React.Component {
     .then((response) => {
       // console.log("Playlist Songs: ", response.data.items);
       this.setState({songs: response.data.items})
+      this.getCurrentSong();
     })
   }
 
@@ -196,7 +213,8 @@ class Party extends React.Component {
   joinAsGuest () {
     this.setState({userType: 'guest'});
     console.log('Joining as Guest');
-    this.getAllSongs();
+    // this.getAllSongs();
+    this.getPlaylistSongs();
   }
 
   removeSong(songId) {
@@ -217,7 +235,15 @@ class Party extends React.Component {
 
   }
 
+  switchToGuest() {
+    this.getCurrentSong();
+    this.setState({userType: 'guest'})
+  }
 
+  switchToHost() {
+    this.getCurrentSong();
+    this.setState({userType: 'host'})
+  }
 
   render() {
     var toBeRendered = () => {
@@ -227,6 +253,9 @@ class Party extends React.Component {
       if (this.state.userType === 'host') {
         return (
           <div>
+              <div>
+              <span className="switchUserType" onClick={this.switchToGuest}>Switch to Guest Mode</span>
+              </div>
             <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
 
             { !this.state.songs && <div><button onClick={this.createNewPlaylist}>Start a New Playlist</button></div>}
@@ -235,7 +264,6 @@ class Party extends React.Component {
             {this.state.currentUser && this.state.currentPlaylist && 
             <div className='hostPlayer'>
               <PlayerHost currentUser={this.state.currentUser} currentPlaylist={this.state.currentPlaylist}/>
-              <Search />
             </div>
             }
             <div className='playlistList'>
@@ -250,12 +278,15 @@ class Party extends React.Component {
       if (this.state.userType === 'guest') {
         return (
           <div>
+              <div>
+              <span className="switchUserType" onClick={this.switchToHost}>Switch to Host Mode</span>
+              </div>
             <div className='playerGuest'>
-              { this.state.currentSong && <PlayerGuest trackId={this.state.currentSong.link.split('track/')[1]}/>}
-              <Search />
+              { this.state.currentSong && <PlayerGuest trackId={this.state.currentSong}/>}
             </div>
             <div className='playlistSongs'>
-              { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} handlePlayButtonClick={this.handlePlayButtonClick} /> }
+              { this.state.songs && <Playlist currentSong={this.state.currentSong} songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} handlePlayButtonClick={this.handlePlayButtonClick} /> }
+
             </div>
           </div>
         )
