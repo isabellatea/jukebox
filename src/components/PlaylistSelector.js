@@ -6,6 +6,7 @@ const PlaylistSelector = (props) => {
   const handlePlaylistSelection = () => {
     console.log("Hi!!!");
     // this.props.sendSelectedPlaylistToSpotifyPlayer(playlist)
+    
   }
   return (
     <div>

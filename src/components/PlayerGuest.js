@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Player = (props) => {
+const PlayerGuest = (props) => {
   return (
     <div>
      <iframe src={'https://open.spotify.com/embed?uri=spotify:track:' + props.trackId} width="300" height="380" frameBorder="0" allowTransparency="true"></iframe>
@@ -10,4 +10,4 @@ const Player = (props) => {
 }
 
 
-export default Player;
+export default PlayerGuest;
