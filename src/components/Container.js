@@ -12,7 +12,6 @@ class Container extends React.Component {
   render() {
     return (
       <div className='container'>
-
           <div className="container-inner">
             <Switch>
               <Route exact path='/' component={Party} />
