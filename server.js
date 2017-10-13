@@ -105,11 +105,9 @@ app.post('/createNewPlaylist', (req, res) => {
 
 // fetch top 50 songs by netVoteCount from songs collection and send to client
 app.get('/songs', (req, res) => {
-  console.log('getting songs for party:', req.query.partyCode);
 
   Song.find({partyCode: req.query.partyCode}).sort({netVoteCount: 'descending'})
   .then((songs) => {
-    console.log('songs:', songs);
     res.send(songs);
   });
   // Song.find({}).sort({netVoteCount: 'descending'}).limit(50)
@@ -145,7 +143,8 @@ app.post('/songs', (req, res) => {
 
 // update vote on songs collection
 app.put('/song', (req, res) => {
-  Song.findOne({name: req.body.name})
+  console.log('song to vote:', req.body);
+  Song.findOne({name: req.body.name, partyCode: req.body.partyCode})
   .then(function(song) {
     if (song) {
       if(req.body.vote > 0) {

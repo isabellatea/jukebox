@@ -7,9 +7,6 @@ const StartParty = (props) => {
 
   return (
     <div>
-      <div className="startPartyWelcome">
-      </div>
-      <div className="startPartyBoxesContainer">
         <a href="/hostLogin">
         <div className="startPartyBoxes">
           <span className="startPartyTitles">Host a Party</span>
@@ -22,7 +19,6 @@ const StartParty = (props) => {
             <input id="partyCode" type="partyCode" name="partyCode"/>
           </form>
         </div>
-      </div>
     </div>
   )
 }

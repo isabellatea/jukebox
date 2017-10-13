@@ -77,7 +77,7 @@ class Party extends React.Component {
     song.vote = 1;
     axios.put('/song', song)
     .then((response) => {
-      this.getAllSongs();
+      this.getAllSongs(this.state.partyCode);
     })
     .catch((err) => {
       console.log(err);
@@ -88,7 +88,7 @@ class Party extends React.Component {
     song.vote = -1;
     axios.put('/song', song)
     .then((response) => {
-      this.getAllSongs();
+      this.getAllSongs(this.state.partyCode);
     })
     .catch((err) => {
       console.log(err);
@@ -205,9 +205,7 @@ class Party extends React.Component {
 
   handleCurrentPlaylistClick(playlist) {
     this.getPlaylistSongs(playlist.id);
-    // this.setState({currentPlaylist: playlist.id}, () => {
-    //   this.getPlaylistSongs();
-    // });
+
 
   }
 
@@ -249,8 +247,11 @@ class Party extends React.Component {
       for (var i = 0 ; i < songs.length; i++) {
         this.state.songs.push(songs[i]);
       }
-      console.log('state songs:', this.state.songs);
-      this.setState({hasSongs: !this.state.hasSongs});
+      if (this.state.songs.length > 0) {
+        this.setState({hasSongs: true});
+      } else {
+        this.setState({hasSongs: false});
+      }
     })
     .catch((err) => {
       console.error.bind(err);
@@ -263,7 +264,6 @@ class Party extends React.Component {
     this.setState({currentSong: this.state.songs[0]});
     this.playCurrentSong(this.state.deviceId, trackId, this.state.songs[0].duration_ms);
     this.removeSong(songId);
-    console.log('current songs:', songs);
   }
 
   joinAsGuest () {
@@ -276,7 +276,7 @@ class Party extends React.Component {
   removeSong(songId) {
     axios.delete('/song', {params: {id: songId}})
     .then((response) => {
-      this.getAllSongs();
+      this.getAllSongs(this.state.partyCode);
     })
     .catch((err) => {
       console.log(err);
@@ -308,16 +308,17 @@ class Party extends React.Component {
               <span className="switchUserTypeButton" onClick={this.switchToGuest}>Switch to Guest Mode</span>
               <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
             </div>
+            { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.createNewPlaylist}>Start a New Playlist</span></div>}
+            { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.getExistingPlaylists}>Choose an Existing Playlist</span></div>}
 
             {this.state.currentUser && this.state.currentPlaylist &&
             <div className='spotifyPlayerContainer'>
               <PlayerHost currentUser={this.state.currentUser} currentPlaylist={this.state.currentPlaylist}/>
             </div>
             }
+            { this.state.currentSong && <PlayerGuest trackId={this.state.currentSong.link.split('track/')[1]}/>}
             { !this.state.hasSongs &&
               <div className='playlistListContainer'>
-            { !this.state.hasSongs && <div><button onClick={this.createNewPlaylist}>Start a New Playlist</button></div>}
-            { !this.state.hasSongs && <div><button onClick={this.getExistingPlaylists}>Choose an Existing Playlist</button></div>}
               { this.state.playlists && <PlaylistSelector playlists={this.state.playlists} handleCurrentPlaylistClick={this.handleCurrentPlaylistClick} />}
             </div>
           }
@@ -331,7 +332,7 @@ class Party extends React.Component {
         return (
           <div>
               <div>
-              <span className="switchUserType" onClick={this.switchToHost}>Switch to Host Mode</span>
+              <span className="switchUserTypeButton" onClick={this.switchToHost}>Switch to Host Mode</span>
               </div>
             <div className='spotifyPlayerContainer'>
               { this.state.currentSong && <PlayerGuest trackId={this.state.currentSong}/>}
@@ -356,4 +357,3 @@ class Party extends React.Component {
 export default Party;
 
 
-            // { this.state.currentSong && <PlayerGuest trackId={this.state.currentSong.link.split('track/')[1]}/>}
