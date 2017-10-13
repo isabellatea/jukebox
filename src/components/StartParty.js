@@ -6,7 +6,7 @@ import axios from 'axios';
 const StartParty = (props) => {
 
   return (
-      <div className="startPartyBoxesContainer">
+    <div>
         <a href="/hostLogin">
         <div className="startPartyBoxes">
           <span className="startPartyTitles">Host a Party</span>
@@ -19,8 +19,7 @@ const StartParty = (props) => {
             <input id="partyCode" type="partyCode" name="partyCode"/>
           </form>
         </div>
-
-      </div>
+    </div>
   )
 }
 
