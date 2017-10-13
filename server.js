@@ -152,6 +152,7 @@ app.put('/song', (req, res) => {
       } else {
         song.downVoteCount++;
       }
+      song.netVoteCount = song.upVoteCount - song.downVoteCount;
       song.save();
       res.sendStatus(201);
     }
