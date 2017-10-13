@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import TextField from 'material-ui/TextField';
 import SearchEntry from './SearchEntry';
 import { Link } from 'react-router-dom';
+
 
 class Search extends React.Component{
   constructor(props) {
@@ -89,10 +89,8 @@ class Search extends React.Component{
 
     return (
       <div className='search'>
-
         <div className='inside'>
-
-        <TextField name="selectUser" onChange={this.onChange}/>
+        <textarea name="selectUser" onChange={this.onChange}/>
         <br />
         <button onClick={this.onSearch}>Search</button>
           <div>
@@ -118,5 +116,6 @@ class Search extends React.Component{
     )
   }
 }
+
 
 export default Search;

@@ -29,7 +29,8 @@ app.use(express.static(__dirname + '/public'));
 // *** Database ***
 const Db = require('./db/config').mongoose;
 const User = require('./db/config').user;
-const Song = require('./db/config').song;
+//const Song = require('./db/config').song;
+const Party = require('./db/config').party;
 
 // *** Parser ***
 const bodyParser = require('body-parser');
@@ -47,9 +48,9 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// *** Helper ***
+// *** Helpers ***
 const spotifyHelpers = require('./helpers/spotifyHelpers.js');
-const tokens = spotifyHelpers.tokens;
+const Song = require('./helpers/otherHelpers.js').Song;
 
 
 // *** Server ***
@@ -76,6 +77,13 @@ app.get('/hostPlaylists', (req, res) => {
   spotifyHelpers.getHostPlaylists(req, res);
 });
 
+app.get('/currentlyPlaying', (req, res) => {
+  spotifyHelpers.currentlyPlaying(req, res);
+});
+
+app.get('/playlistSongs', (req, res) => {
+  spotifyHelpers.getPlaylistSongs(req.query, res);
+})
 
 // Host Authentication
 app.get('/hostLogin', (req, res) => {
@@ -84,6 +92,10 @@ app.get('/hostLogin', (req, res) => {
 
 app.get('/callback', (req, res) => {
   spotifyHelpers.redirectAfterLogin(req, res);
+});
+
+app.post('/createNewPlaylist', (req, res) => {
+  spotifyHelpers.createNewPlaylist(req, res);
 });
 
 
@@ -108,7 +120,8 @@ app.post('/songs', (req, res) => {
     link: req.body.link,
     userName: req.body.userName,
     artist: req.body.artist,
-    duration: req.body.duration
+    duration: req.body.duration,
+    partyCode: req.body.partyCode
   });
   User.findOne({name: req.body.userName})
   .then((user) => {
@@ -146,6 +159,40 @@ app.delete('/song', (req, res) => {
     if (err) { console.log(err); }
   });
   res.sendStatus(201);
+});
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  ROUTES to ACCESS DATABASE PARTY COLLECTION
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+//Look up party via party code
+app.get('/party', (req,res) => {
+  Party.find({partyCode: req.body.partyCode})
+    .then((party) => {
+      res.json(party);
+    })
+});
+
+//Create new party
+app.post('/party', (req,res) => {
+  console.log("server party code sent:", req.body.partyCode);
+  console.log('server party host:', req.body.partyHost);
+
+  var newParty = new Party({
+    partyCode: req.body.partyCode,
+    partyHost: req.body.partyHost
+  });
+  Party.findOne({partyCode: req.body.partyCode})
+    .then((party) => {
+    if(!party) {
+      newParty.save()
+        .then(() => {
+        res.sendStatus(201);
+        });
+    } else {
+      res.send("Party already exists!");
+    }
+    })
+
 });
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *

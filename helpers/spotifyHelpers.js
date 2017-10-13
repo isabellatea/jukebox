@@ -3,6 +3,7 @@ const Promise = require('bluebird');
 const cookieParser = require('cookie-parser');
 const request = require('request');
 const querystring = require('querystring');
+const otherHelpers = require('./otherHelpers.js');
 
 const searchAuthOptions = {
   url: 'https://accounts.spotify.com/api/token',
@@ -14,7 +15,6 @@ const searchAuthOptions = {
   },
   json: true
 };
-
 
 
 //use Spotify API credentials to get search results without needing to use Oauth
@@ -54,7 +54,7 @@ const generateRandomString = (length) => {
 exports.handleHostLogin = (req, res) => {
   console.log(credentials.redirect_uri)
   const state = generateRandomString(16);
-  const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state';
+  const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state playlist-read-private playlist-read-collaborative playlist-modify-public user-library-read user-read-currently-playing';
 
   res.cookie('spotify_auth_state', state);
 
@@ -92,16 +92,12 @@ exports.redirectAfterLogin = (req, res) => {
       const access_token = body.access_token;
       const refresh_token = body.refresh_token;
 
-      exports.tokens.access_token = body.access_token;
-      exports.tokens.refresh_token = body.refresh_token;
-
       //redirect host user back to playlist page and pass token to browser
-      // res.redirect(credentials.redirect_uri +'#' +
-      //   querystring.stringify({
-      //     access_token: access_token,
-      //     refresh_token: refresh_token
-      //   }));
-            res.redirect(credentials.redirect_uri);
+      res.redirect(credentials.redirect_uri +'#' +
+        querystring.stringify({
+          access_token: access_token,
+          refresh_token: refresh_token
+        }));
     } else {
       res.redirect('/#' +
         querystring.stringify({
@@ -112,10 +108,12 @@ exports.redirectAfterLogin = (req, res) => {
 };
 
 exports.getHostInfo = (req, res) => {
+  console.log('req data:', req.query.access_token);
+  var token = req.query.access_token;
   const settings = {
     url: 'https://api.spotify.com/v1/me',
     headers: {
-      'Authorization': 'Bearer ' + exports.tokens.access_token
+      'Authorization': 'Bearer ' + token
     }
   }
 
@@ -127,10 +125,11 @@ exports.getHostInfo = (req, res) => {
 };
 
 exports.getHostPlaylists = (req, res) => {
+  console.log('getting host playlists', req.query.access_token);
   const settings = {
     url: 'https://api.spotify.com/v1/me/playlists',
     headers: {
-      'Authorization': 'Bearer ' + exports.tokens.access_token
+      'Authorization': 'Bearer ' + req.query.access_token
     }
   }
 
@@ -139,10 +138,58 @@ exports.getHostPlaylists = (req, res) => {
       res.send(body);
     }
   })
-
 }
 
-exports.tokens = {
-  access_token : null,
-  refresh_token : null
+exports.currentlyPlaying = (req, res) => {
+  const settings = {
+    url: 'https://api.spotify.com/v1/me/player/currently-playing',
+    headers: {
+      'Authorization': 'Bearer ' + req.query.access_token
+    }
+  }
+
+  request.get(settings, function(error, response, body) {
+    if (!error) {
+      res.send(body);
+    }
+  })
+}
+
+
+
+exports.getPlaylistSongs = (req, res) => {
+  console.log("Req:", req);
+  const settings = {
+    url: 'https://api.spotify.com/v1/users/' + req.currentUser + '/playlists/' + req.currentPlaylist + '/tracks',
+    headers: {
+      'Authorization': 'Bearer ' + req.query.access_token
+    }
+  }
+
+  request.get(settings, function(error, response, body) {
+    if(!error) {
+      res.send(body);
+    }
+  })
+}
+
+
+exports.createNewPlaylist = (req, res) => {
+  console.log('Req:', req)
+  const settings = {
+    url: 'https://api.spotify.com/v1/users/' + req.currentUser + '/playlists/',
+    body: JSON.stringify({
+      name: "testPlaylist",
+      public: true
+    }),
+    headers: {
+      'Authorization': 'Bearer ' + req.query.access_token
+    }
+  }
+
+  request.post(settings, function(error, response, body) {
+    if(!error) {
+      res.send(body);
+    }
+  })
 }

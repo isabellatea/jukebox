@@ -1,14 +1,14 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Party from './Party';
+import Playlist from './Playlist';
 import Signup from './Signup';
+import Login from './Login';
 import Search from './Search';
+import Party from './Party';
 import '../css/styles.css';
 
 
 class Container extends React.Component {
-
   render() {
     return (
       <Switch>
@@ -19,4 +19,6 @@ class Container extends React.Component {
     )
   }
 }
+
+
 export default Container;
