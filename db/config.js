@@ -38,7 +38,7 @@ const PartySchema = new Schema({
   token: String
 });
 
-//const Song = mongoose.model('song', SongSchema);
+const Song = mongoose.model('song', SongSchema);
 const User = mongoose.model('user', UserSchema);
 const Party = mongoose.model('party', PartySchema);
 
@@ -68,6 +68,6 @@ const Party = mongoose.model('party', PartySchema);
 //   upVoteCount: 9, downVoteCount: 8}).save();
 
 module.exports.mongoose = mongoose;
-//module.exports.song = Song;
+module.exports.song = Song;
 module.exports.user = User;
 module.exports.party = Party;

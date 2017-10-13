@@ -108,7 +108,6 @@ exports.redirectAfterLogin = (req, res) => {
 };
 
 exports.getHostInfo = (req, res) => {
-  console.log('req data:', req.query.access_token);
   var token = req.query.access_token;
   const settings = {
     url: 'https://api.spotify.com/v1/me',
@@ -125,7 +124,6 @@ exports.getHostInfo = (req, res) => {
 };
 
 exports.getHostPlaylists = (req, res) => {
-  console.log('getting host playlists', req.query.access_token);
   const settings = {
     url: 'https://api.spotify.com/v1/me/playlists',
     headers: {
@@ -158,9 +156,9 @@ exports.currentlyPlaying = (req, res) => {
 
 
 exports.getPlaylistSongs = (req, res) => {
-  console.log("Req:", req);
+
   const settings = {
-    url: 'https://api.spotify.com/v1/users/' + req.currentUser + '/playlists/' + req.currentPlaylist + '/tracks',
+    url: 'https://api.spotify.com/v1/users/' + req.query.user + '/playlists/' + req.query.playlist + '/tracks',
     headers: {
       'Authorization': 'Bearer ' + req.query.access_token
     }

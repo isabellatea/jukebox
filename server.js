@@ -29,7 +29,7 @@ app.use(express.static(__dirname + '/public'));
 // *** Database ***
 const Db = require('./db/config').mongoose;
 const User = require('./db/config').user;
-//const Song = require('./db/config').song;
+const Song = require('./db/config').song;
 const Party = require('./db/config').party;
 
 // *** Parser ***
@@ -50,7 +50,6 @@ app.use(session({
 
 // *** Helpers ***
 const spotifyHelpers = require('./helpers/spotifyHelpers.js');
-const Song = require('./helpers/otherHelpers.js').Song;
 
 
 // *** Server ***
@@ -82,7 +81,7 @@ app.get('/currentlyPlaying', (req, res) => {
 });
 
 app.get('/playlistSongs', (req, res) => {
-  spotifyHelpers.getPlaylistSongs(req.query, res);
+  spotifyHelpers.getPlaylistSongs(req, res);
 })
 
 // Host Authentication
@@ -106,34 +105,42 @@ app.post('/createNewPlaylist', (req, res) => {
 
 // fetch top 50 songs by netVoteCount from songs collection and send to client
 app.get('/songs', (req, res) => {
-  Song.find({}).sort({netVoteCount: 'descending'}).limit(50)
+  console.log('getting songs for party:', req.query.partyCode);
+
+  Song.find({partyCode: req.query.partyCode}).sort({netVoteCount: 'descending'})
   .then((songs) => {
-    res.json(songs);
+    console.log('songs:', songs);
+    res.send(songs);
   });
+  // Song.find({}).sort({netVoteCount: 'descending'}).limit(50)
+  // .then((songs) => {
+  //   res.json(songs);
+  // });
 });
 
 // add song to both user collection and songs collection
 app.post('/songs', (req, res) => {
-  var newSong = new Song({
-    name: req.body.name,
-    image: req.body.image,
-    link: req.body.link,
-    userName: req.body.userName,
-    artist: req.body.artist,
-    duration: req.body.duration,
-    partyCode: req.body.partyCode
-  });
-  User.findOne({name: req.body.userName})
-  .then((user) => {
-    if (user) {
-      user.addedSongs.push(newSong);
-      user.save();
-      return newSong.save();
-    }
-  })
-  .then(() => {
-    res.sendStatus(201);
-  });
+
+  var songsToAdd = req.body.songs;
+  var partyCode = req.body.partyCode;
+  var userName = req.body.userName;
+  for (var i = 0 ; i < songsToAdd.length ; i++) {
+    var song = songsToAdd[i].track;
+
+    new Song({
+      name: song.name,
+      artist: song.artists[0].name,
+      image: song.album.images[1].url,
+      link: song.external_urls.spotify,
+      upVoteCount: 1,
+      downVoteCount: 0,
+      netVoteCount: 1,
+      duration_ms: song.duration_ms,
+      userName: userName,
+      partyCode: partyCode
+    }).save();
+  }
+  res.sendStatus(201);
 });
 
 // update vote on songs collection
@@ -174,8 +181,6 @@ app.get('/party', (req,res) => {
 
 //Create new party
 app.post('/party', (req,res) => {
-  console.log("server party code sent:", req.body.partyCode);
-  console.log('server party host:', req.body.partyHost);
 
   var newParty = new Party({
     partyCode: req.body.partyCode,

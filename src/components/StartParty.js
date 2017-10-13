@@ -6,19 +6,24 @@ import axios from 'axios';
 const StartParty = (props) => {
 
   return (
-      <div>
-        <div className="hostPartyButton">
-          <a href="/hostLogin">Host a Party</a>
+    <div>
+      <div className="startPartyWelcome">
+      </div>
+      <div className="startPartyBoxesContainer">
+        <a href="/hostLogin">
+        <div className="startPartyBoxes">
+          <span className="startPartyTitles">Host a Party</span>
         </div>
-
-        <div className="joinPartyButton">
+        </a>
+        <div className="startPartyBoxes">
           <form onSubmit={props.join}>
-            <label htmlFor="partyCode">Enter Your Party Code:</label>
+          <span className="startPartyTitles" onClick={props.joinAsGuest}>Join A Party</span>
+            <label htmlFor="partyCode" className="partyCodeText">Party Code:</label>
             <input id="partyCode" type="partyCode" name="partyCode"/>
-            <button onClick={props.joinAsGuest}>Join Now!</button>
           </form>
         </div>
       </div>
+    </div>
   )
 }
 
