@@ -1,7 +1,6 @@
 import React from 'react';
 import PlaylistEntry from './PlaylistEntry';
 
-
 const Playlist = (props) => {
   return (
     <div>
@@ -11,6 +10,7 @@ const Playlist = (props) => {
           <PlaylistEntry key={i} position={i} downVote={props.downVote} handlePlay={props.handlePlayButtonClick} upVote={props.upVote} song={song}/>
         )})
       }
+
     </div>
   );
 }

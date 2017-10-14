@@ -21,8 +21,6 @@ if (!env.prod) {
   }));
 }
 
-
-
 // *** Static Assets ***
 app.use(express.static(__dirname + '/public'));
 
@@ -30,6 +28,7 @@ app.use(express.static(__dirname + '/public'));
 const Db = require('./db/config').mongoose;
 const User = require('./db/config').user;
 const Song = require('./db/config').song;
+const Party = require('./db/config').party;
 
 // *** Parser ***
 const bodyParser = require('body-parser');
@@ -39,17 +38,9 @@ const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 const querystring = require('querystring');
 
-// *** Session ***
-var session = require('express-session');
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true
-}));
 
-// *** Helper ***
+// *** Helpers ***
 const spotifyHelpers = require('./helpers/spotifyHelpers.js');
-const tokens = spotifyHelpers.tokens;
 
 
 // *** Server ***
@@ -67,10 +58,10 @@ app.get('/hostInfo', (req, res) => {
 });
 // fetch song research results and send to client
 app.get('/songs/search', (req, res) => {
-  spotifyHelpers.getTrackSearchResults(req.query.query)
-  .then((results) => {
-      res.json(results);
-    });
+  spotifyHelpers.getTrackSearchResults(req, res, req.query.query)
+  // .then((results) => {
+  //     res.json(results);
+  //   });
 });
 app.get('/hostPlaylists', (req, res) => {
   spotifyHelpers.getHostPlaylists(req, res);
@@ -81,7 +72,7 @@ app.get('/currentlyPlaying', (req, res) => {
 });
 
 app.get('/playlistSongs', (req, res) => {
-  spotifyHelpers.getPlaylistSongs(req.query, res);
+  spotifyHelpers.getPlaylistSongs(req, res);
 })
 
 // Host Authentication
@@ -93,10 +84,6 @@ app.get('/callback', (req, res) => {
   spotifyHelpers.redirectAfterLogin(req, res);
 });
 
-app.post('/createNewPlaylist', (req, res) => {
-  spotifyHelpers.createNewPlaylist(req, res);
-});
-
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -105,38 +92,60 @@ app.post('/createNewPlaylist', (req, res) => {
 
 // fetch top 50 songs by netVoteCount from songs collection and send to client
 app.get('/songs', (req, res) => {
-  Song.find({}).sort({netVoteCount: 'descending'}).limit(50)
+
+  Song.find({partyCode: req.query.partyCode}).sort({netVoteCount: 'descending'}).limit(50)
   .then((songs) => {
-    res.json(songs);
+    res.send(songs);
   });
 });
 
-// add song to both user collection and songs collection
+// add songs to both user collection and songs collection
 app.post('/songs', (req, res) => {
-  var newSong = new Song({
-    name: req.body.name,
-    image: req.body.image,
-    link: req.body.link,
-    userName: req.body.userName,
-    artist: req.body.artist,
-    duration: req.body.duration
-  });
-  User.findOne({name: req.body.userName})
-  .then((user) => {
-    if (user) {
-      user.addedSongs.push(newSong);
-      user.save();
-      return newSong.save();
+  var songsToAdd = req.body.songs;
+  var partyCode = req.body.partyCode;
+  var userName = req.body.userName;
+
+  if (!Array.isArray(songsToAdd)){
+    var song = songsToAdd;
+    new Song({
+      name: song.name,
+      artist: song.artists[0].name,
+      image: song.album.images[1].url,
+      link: song.external_urls.spotify,
+      upVoteCount: 1,
+      downVoteCount: 0,
+      netVoteCount: 1,
+      duration_ms: song.duration_ms,
+      userName: userName,
+      partyCode: partyCode
+    }).save();
+  }
+  else {
+
+    for (var i = 0 ; i < songsToAdd.length ; i++) {
+      var song = songsToAdd[i].track;
+
+      new Song({
+        name: song.name,
+        artist: song.artists[0].name,
+        image: song.album.images[1].url,
+        link: song.external_urls.spotify,
+        upVoteCount: 1,
+        downVoteCount: 0,
+        netVoteCount: 1,
+        duration_ms: song.duration_ms,
+        userName: userName,
+        partyCode: partyCode
+      }).save();
     }
-  })
-  .then(() => {
-    res.sendStatus(201);
-  });
+  }
+  res.sendStatus(201);
 });
 
 // update vote on songs collection
 app.put('/song', (req, res) => {
-  Song.findOne({name: req.body.name})
+  console.log('song to vote:', req.body);
+  Song.findOne({name: req.body.name, partyCode: req.body.partyCode})
   .then(function(song) {
     if (song) {
       if(req.body.vote > 0) {
@@ -144,6 +153,7 @@ app.put('/song', (req, res) => {
       } else {
         song.downVoteCount++;
       }
+      song.netVoteCount = song.upVoteCount - song.downVoteCount;
       song.save();
       res.sendStatus(201);
     }
@@ -160,36 +170,68 @@ app.delete('/song', (req, res) => {
 });
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  ROUTES to ACCESS DATABASE PARTY COLLECTION
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+//Look up party via party code
+app.get('/party', (req,res) => {
+  Party.find({partyCode: req.body.partyCode})
+    .then((party) => {
+      res.json(party);
+    })
+});
+
+//Create new party
+app.post('/party', (req,res) => {
+
+  var newParty = new Party({
+    partyCode: req.body.partyCode,
+    partyHost: req.body.partyHost
+  });
+  Party.findOne({partyCode: req.body.partyCode})
+    .then((party) => {
+    if(!party) {
+      newParty.save()
+        .then(() => {
+        res.sendStatus(201);
+        });
+    } else {
+      res.send("Party already exists!");
+    }
+    })
+
+});
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
   ROUTES to ACCESS DATABASE USER COLLECTION
 * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 // fetch all users from users collection and send to client
-app.get('/users', (req,res) => {
-  User.find({})
-  .then((users) => {
-    res.json(users);
-  });
-});
+// app.get('/users', (req,res) => {
+//   User.find({})
+//   .then((users) => {
+//     res.json(users);
+//   });
+// });
 
 // add user to users collection
-app.post('/signup', (req, res) => {
-  var newUser = new User({
-    name: req.body.username
-  });
+// app.post('/signup', (req, res) => {
+//   var newUser = new User({
+//     name: req.body.username
+//   });
 
-  User.findOne({name: req.body.username})
-  .then((user) => {
-    if (!user) {
-      newUser.save()
-      .then(() => {
-        req.session.username = req.body.username;
-        res.sendStatus(201);
-      });
-    } else {
-      res.send('User already exist!');
-    }
-  });
-});
+//   User.findOne({name: req.body.username})
+//   .then((user) => {
+//     if (!user) {
+//       newUser.save()
+//       .then(() => {
+//         req.session.username = req.body.username;
+//         res.sendStatus(201);
+//       });
+//     } else {
+//       res.send('User already exist!');
+//     }
+//   });
+// });
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   ALL Other Routes
@@ -203,6 +245,3 @@ app.get('/tokens', (req, res) => {
 app.get('/*', (req, res) => {
   res.status(404).send('Not Found');
 });
-
-
-

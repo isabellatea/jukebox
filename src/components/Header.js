@@ -43,11 +43,3 @@ class Header extends React.Component {
 
 
 export default Header;
-
-
-
-            // <ul>
-            // <li className="header-item"><Link to="/">Home</Link></li>
-            // <li className="header-item"><Link to="/search">Search</Link></li>
-            // <li className="header-item"><Link to="/">Leave Party</Link></li>
-            // </ul>
