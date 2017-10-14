@@ -67,10 +67,10 @@ app.get('/hostInfo', (req, res) => {
 });
 // fetch song research results and send to client
 app.get('/songs/search', (req, res) => {
-  spotifyHelpers.getTrackSearchResults(req.query.query)
-  .then((results) => {
-      res.json(results);
-    });
+  spotifyHelpers.getTrackSearchResults(req, res, req.query.query)
+  // .then((results) => {
+  //     res.json(results);
+  //   });
 });
 app.get('/hostPlaylists', (req, res) => {
   spotifyHelpers.getHostPlaylists(req, res);

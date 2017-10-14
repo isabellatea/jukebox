@@ -5,37 +5,50 @@ const request = require('request');
 const querystring = require('querystring');
 const otherHelpers = require('./otherHelpers.js');
 
-const searchAuthOptions = {
-  url: 'https://accounts.spotify.com/api/token',
-  headers: {
-    'Authorization': 'Basic ' + (new Buffer(credentials.client_id + ':' + credentials.client_secret).toString('base64'))
-  },
-  form: {
-    grant_type: 'client_credentials'
-  },
-  json: true
-};
+// const searchAuthOptions = {
+//   url: 'https://accounts.spotify.com/api/token',
+//   headers: {
+//     'Authorization': 'Basic ' + (new Buffer(credentials.client_id + ':' + credentials.client_secret).toString('base64'))
+//   },
+//   form: {
+//     grant_type: 'client_credentials'
+//   },
+//   json: true
+// };
 
 
 //use Spotify API credentials to get search results without needing to use Oauth
-exports.getTrackSearchResults = (queryString) => {
-  return new Promise((resolve, reject) => {
-    request.post(searchAuthOptions, (error, response, body) => {
-      if (!error && response.statusCode === 200) {
-        const token = body.access_token;
-        const options = {
-          url: `https://api.spotify.com/v1/search?q=${queryString}&type=track&market=US&limit=10`,
-          headers: {'Authorization': 'Bearer ' + token},
-          json: true
-        };
-        request.get(options, (error, response, body) => {
-          if (error) {
-            reject(error);
-          }
-          resolve(body);
-        });
-      }
-    });
+// exports.getTrackSearchResults = (queryString) => {
+//   return new Promise((resolve, reject) => {
+//     request.post(searchAuthOptions, (error, response, body) => {
+//       if (!error && response.statusCode === 200) {
+//         const token = body.access_token;
+//         const options = {
+//           url: `https://api.spotify.com/v1/search?q=${queryString}&type=track&market=US&limit=10`,
+//           headers: {'Authorization': 'Bearer ' + token},
+//           json: true
+//         };
+//         request.get(options, (error, response, body) => {
+//           if (error) {
+//             reject(error);
+//           }
+//           resolve(body);
+//         });
+//       }
+//     });
+//   });
+// };
+
+exports.getTrackSearchResults = (req, res, queryString) => {
+  const options = {
+    url: `https://api.spotify.com/v1/search?q=${queryString}&type=track&market=US&limit=10`,
+    headers: {'Authorization': 'Bearer ' + req.query.access_token},
+    json: true
+  };
+  request.get(options, function(error, response, body) {
+    if (!error) {
+      res.send(body);
+    }
   });
 };
 

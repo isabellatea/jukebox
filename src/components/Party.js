@@ -2,12 +2,12 @@ import React from 'react';
 import axios from 'axios';
 import SpotifyWebApi from 'spotify-web-api-js';
 import PlaylistEntry from './PlaylistEntry';
-import PlayerGuest from './PlayerGuest.js';
+// import PlayerGuest from './PlayerGuest.js';
 import PlaylistSelector from './PlaylistSelector.js';
 import StartParty from './StartParty.js';
 import sampleData from '../lib/sampleData.js';
 import Playlist from './Playlist.js';
-import PlayerHost from './PlayerHost.js';
+import Player from './Player.js';
 import Search from './Search.js';
 
 const spotifyApi = new SpotifyWebApi();
@@ -308,20 +308,15 @@ class Party extends React.Component {
               <span className="switchUserTypeButton" onClick={this.switchToGuest}>Switch to Guest Mode</span>
               <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
             </div>
-            { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.createNewPlaylist}>Start a New Playlist</span></div>}
+            { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.createNewPlaylist}>Start A New Playlist</span></div>}
             { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.getExistingPlaylists}>Choose an Existing Playlist</span></div>}
 
-            {this.state.currentUser && this.state.currentPlaylist &&
-            <div className='spotifyPlayerContainer'>
-              <PlayerHost currentUser={this.state.currentUser} currentPlaylist={this.state.currentPlaylist}/>
-            </div>
-            }
-            { this.state.currentSong && <PlayerGuest trackId={this.state.currentSong.link.split('track/')[1]}/>}
+            { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
             { !this.state.hasSongs &&
-              <div className='playlistListContainer'>
+            <div className='playlistListContainer'>
               { this.state.playlists && <PlaylistSelector playlists={this.state.playlists} handleCurrentPlaylistClick={this.handleCurrentPlaylistClick} />}
             </div>
-          }
+            }
             { this.state.hasSongs && <div className='playButtonStyle'><button onClick={this.handlePlayButtonClick}>Play top song</button></div> }
             { this.state.hasSongs && <Playlist currentSong={this.state.currentSong} songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
           </div>
@@ -334,8 +329,8 @@ class Party extends React.Component {
               <div>
               <span className="switchUserTypeButton" onClick={this.switchToHost}>Switch to Host Mode</span>
               </div>
-            <div className='spotifyPlayerContainer'>
-              { this.state.currentSong && <PlayerGuest trackId={this.state.currentSong}/>}
+            <div className='currentlyPlayingContainer'>
+              <p> Currently Playing: { this.state.currentSong.name } by {this.state.currentSong.artist} </p>
             </div>
             <div className='playlistListContainer'>
               { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
@@ -357,3 +352,8 @@ class Party extends React.Component {
 export default Party;
 
 
+            // {this.state.currentUser && this.state.currentPlaylist &&
+            // <div className='spotifyPlayerContainer'>
+            //   <PlayerHost currentUser={this.state.currentUser} currentPlaylist={this.state.currentPlaylist}/>
+            // </div>}
+            // <Search getSpotifyToken={this.getSpotifyToken} addSongs={this.addSongs} />
