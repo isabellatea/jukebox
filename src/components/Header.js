@@ -30,9 +30,9 @@ class Header extends React.Component {
       <div>
         <div className="header">
             <img src='http://i67.tinypic.com/335ej5e.png' alt='pizza jukebox' className="header-title" />
-            <Link to="/" className="header-item">Home</Link>
-            <Link to="/search" className="header-item">Search</Link>
-            <Link to="/" className="header-item">Leave Party</Link>
+            <span className="header-item"><Link to="/">Home</Link></span>
+            <span className="header-item"><Link to="/search">Search</Link></span>
+            <span className="header-item"><Link to="/">Leave Party</Link></span>
 
 
         </div>

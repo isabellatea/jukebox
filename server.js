@@ -21,6 +21,8 @@ if (!env.prod) {
   }));
 }
 
+
+
 // *** Static Assets ***
 app.use(express.static(__dirname + '/public'));
 
@@ -29,6 +31,7 @@ const Db = require('./db/config').mongoose;
 const User = require('./db/config').user;
 const Song = require('./db/config').song;
 const Party = require('./db/config').party;
+
 
 // *** Parser ***
 const bodyParser = require('body-parser');
@@ -41,6 +44,7 @@ const querystring = require('querystring');
 
 // *** Helpers ***
 const spotifyHelpers = require('./helpers/spotifyHelpers.js');
+const tokens = spotifyHelpers.tokens;
 
 
 // *** Server ***
@@ -65,6 +69,44 @@ app.get('/songs/search', (req, res) => {
 });
 app.get('/hostPlaylists', (req, res) => {
   spotifyHelpers.getHostPlaylists(req, res);
+});
+app.get('/hostPlaylists', (req, res) => {
+  spotifyHelpers.getHostPlaylists(req, res);
+});
+
+app.get('/currentlyPlaying', (req, res) => {
+  spotifyHelpers.currentlyPlaying(req, res);
+});
+
+app.get('/playlistSongs', (req, res) => {
+  spotifyHelpers.getPlaylistSongs(req.query, res);
+})
+
+// Host Authentication
+app.get('/hostLogin', (req, res) => {
+  spotifyHelpers.handleHostLogin(req, res);
+});
+
+app.get('/callback', (req, res) => {
+  spotifyHelpers.redirectAfterLogin(req, res);
+});
+
+app.post('/createNewPlaylist', (req, res) => {
+  spotifyHelpers.createNewPlaylist(req, res);
+});
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  ROUTES to ACCESS DATABASE SONG COLLECTION
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+// fetch top 50 songs by netVoteCount from songs collection and send to client
+app.get('/songs', (req, res) => {
+  Song.find({}).sort({netVoteCount: 'descending'}).limit(50)
+  .then((songs) => {
+    res.json(songs);
+  });
 });
 
 app.get('/currentlyPlaying', (req, res) => {
@@ -198,8 +240,8 @@ app.post('/party', (req,res) => {
       res.send("Party already exists!");
     }
     })
-
 });
+
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   ROUTES to ACCESS DATABASE USER COLLECTION
@@ -239,6 +281,7 @@ app.post('/party', (req,res) => {
 
 app.get('/tokens', (req, res) => {
   res.send(tokens);
+
 });
 
 // send 404 to client

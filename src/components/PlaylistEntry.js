@@ -28,5 +28,5 @@ const PlaylistEntry = (props) => {
   );
 }
 
-
 export default PlaylistEntry;
+

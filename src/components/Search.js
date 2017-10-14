@@ -9,7 +9,6 @@ const Search = (props) => {
     props.queryHandler(input.target.value);
   }
 
-
   return (
 
     <div>
@@ -17,7 +16,6 @@ const Search = (props) => {
       <input onChange= {(input) => query(input)} type="text"/>
       <br />
       <button onClick={clickHandler}>Search</button>
-
       { props.searchList && props.searchList.map(
         (result, i) => {
           return (
@@ -27,6 +25,7 @@ const Search = (props) => {
       }
     </div>
   );
+
 }
 
 export default Search;

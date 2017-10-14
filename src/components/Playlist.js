@@ -1,7 +1,6 @@
 import React from 'react';
 import PlaylistEntry from './PlaylistEntry';
 
-
 const Playlist = (props) => {
   return (
     <div>

@@ -52,6 +52,9 @@ exports.redirectAfterLogin = (req, res) => {
       const access_token = body.access_token;
       const refresh_token = body.refresh_token;
 
+      exports.tokens.access_token = body.access_token;
+      exports.tokens.refresh_token = body.refresh_token;
+
       //redirect host user back to playlist page and pass token to browser
       res.redirect(credentials.redirect_uri +'#' +
         querystring.stringify({
@@ -175,11 +178,4 @@ const generateRandomString = (length) => {
   }
   return text;
 };
-
-
-
-
-
-
-
 

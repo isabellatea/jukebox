@@ -358,5 +358,3 @@ class Party extends React.Component {
 
 
 export default Party;
-
-
