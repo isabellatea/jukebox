@@ -141,6 +141,7 @@ class Party extends React.Component {
   }
 
 
+
   //get the active device for the host user who is signed in to Spotify
   getDeviceId() {
     spotifyApi.getMyDevices()
@@ -182,6 +183,7 @@ class Party extends React.Component {
   songEnded() {
     this.handlePlayButtonClick();
   }
+
 
   getExistingPlaylists() {
     axios.get('/hostPlaylists', {
@@ -272,6 +274,7 @@ class Party extends React.Component {
     })
   }
 
+
   queryHandler(queryString) {
     this.setState({searchQuery: queryString});
   }
@@ -309,40 +312,50 @@ class Party extends React.Component {
       if (this.state.userType === 'host') {
         return (
           <div>
-            <div>
-            </div>
-            <div className="infoBar">
+            <div className="infoBarHost">
               <span className="switchUserTypeButton" onClick={this.switchToGuest}>Switch to Guest Mode</span>
               <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
             </div>
+            { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.createNewPlaylist}>Start A New Playlist</span></div>}
+            { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.getExistingPlaylists}>Choose an Existing Playlist</span></div>}
+            
             <Search addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler}/>
 
-            { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.getExistingPlaylists}>Choose an Existing Playlist</span></div>}
-
-            { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
             { !this.state.hasSongs &&
             <div className='playlistListContainer'>
               { this.state.playlists && <PlaylistSelector playlists={this.state.playlists} handleCurrentPlaylistClick={this.handleCurrentPlaylistClick} />}
             </div>
             }
-            { this.state.hasSongs && <div className='playButtonStyle'><button onClick={this.handlePlayButtonClick}>Play top song</button></div> }
-            { this.state.hasSongs && <Playlist currentSong={this.state.currentSong} songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
+
+            <div className='spotifyPlayerContainer'>
+              { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
+              { this.state.hasSongs && <button className='playButton' onClick={this.handlePlayButtonClick}>{!this.state.currentSong ? 'Play Top Song' : 'Play Next Song'}</button> }
+              { this.state.hasSongs && <button className='addSongButton' onClick={this.handlePlayButtonClick}>Add A Song</button> }
+            </div>
+            <div className='playlistContainer'>
+              { this.state.hasSongs && <Playlist currentSong={this.state.currentSong} songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
+            </div>
           </div>
+
         );
       }
 
       if (this.state.userType === 'guest') {
         return (
           <div>
-              <div>
-              <span className="switchUserTypeButton" onClick={this.switchToHost}>Switch to Host Mode</span>
-              </div>
-            <div className='currentlyPlayingContainer'>
-              <p> Currently Playing: { this.state.currentSong.name } by {this.state.currentSong.artist} </p>
-            </div>
-            <div className='playlistListContainer'>
-              { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
 
+            <div className="infoBarGuest">
+              <span className="switchUserTypeButton" onClick={this.switchToHost}>Switch to Host Mode</span>
+              <h2>Currently in {this.state.currentUser}'s Party! (Party Code: {this.state.partyCode})</h2>
+            </div>
+
+            <div className='currentlyPlayingContainer'>
+              <img src="http://i66.tinypic.com/2rp9oih.png" alt="jukebox" /> <br />
+              <p> Currently Playing: { this.state.currentSong.name } by {this.state.currentSong.artist} </p>
+              <button className='addSongButton' onClick={this.handlePlayButtonClick}>Add A Song</button>
+            </div>
+            <div className='playlistContainer'>
+              { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
             </div>
           </div>
         )
@@ -350,7 +363,7 @@ class Party extends React.Component {
     }
       return (
         <div>
-        {toBeRendered()}
+          {toBeRendered()}
         </div>
       )
   }

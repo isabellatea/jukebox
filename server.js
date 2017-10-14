@@ -93,20 +93,27 @@ app.get('/callback', (req, res) => {
 // fetch top 50 songs by netVoteCount from songs collection and send to client
 app.get('/songs', (req, res) => {
 
+
   Song.find({partyCode: req.query.partyCode}).sort({netVoteCount: 'descending'}).limit(50)
   .then((songs) => {
     res.send(songs);
   });
+  // Song.find({}).sort({netVoteCount: 'descending'}).limit(50)
+  // .then((songs) => {
+  //   res.json(songs);
+  // });
 });
 
 // add songs to both user collection and songs collection
 app.post('/songs', (req, res) => {
+
   var songsToAdd = req.body.songs;
   var partyCode = req.body.partyCode;
   var userName = req.body.userName;
 
   if (!Array.isArray(songsToAdd)){
     var song = songsToAdd;
+
     new Song({
       name: song.name,
       artist: song.artists[0].name,
@@ -120,6 +127,7 @@ app.post('/songs', (req, res) => {
       partyCode: partyCode
     }).save();
   }
+
   else {
 
     for (var i = 0 ; i < songsToAdd.length ; i++) {
@@ -139,6 +147,7 @@ app.post('/songs', (req, res) => {
       }).save();
     }
   }
+
   res.sendStatus(201);
 });
 
@@ -171,6 +180,41 @@ app.delete('/song', (req, res) => {
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   ROUTES to ACCESS DATABASE PARTY COLLECTION
+<<<<<<< HEAD
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+//Look up party via party code
+app.get('/party', (req,res) => {
+  Party.find({partyCode: req.body.partyCode})
+    .then((party) => {
+      res.json(party);
+    })
+});
+
+//Create new party
+app.post('/party', (req,res) => {
+
+  var newParty = new Party({
+    partyCode: req.body.partyCode,
+    partyHost: req.body.partyHost
+  });
+  Party.findOne({partyCode: req.body.partyCode})
+    .then((party) => {
+    if(!party) {
+      newParty.save()
+        .then(() => {
+        res.sendStatus(201);
+        });
+    } else {
+      res.send("Party already exists!");
+    }
+    })
+
+});
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  ROUTES to ACCESS DATABASE USER COLLECTION
+=======
+>>>>>>> d321dda508ca4b7fc5dfc32f76d9ba1d068fa7e7
 * * * * * * * * * * * * * * * * * * * * * * * * * * */
 //Look up party via party code
 app.get('/party', (req,res) => {
