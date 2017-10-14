@@ -21,8 +21,6 @@ if (!env.prod) {
   }));
 }
 
-
-
 // *** Static Assets ***
 app.use(express.static(__dirname + '/public'));
 
@@ -40,13 +38,6 @@ const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 const querystring = require('querystring');
 
-// *** Session ***
-var session = require('express-session');
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true
-}));
 
 // *** Helpers ***
 const spotifyHelpers = require('./helpers/spotifyHelpers.js');
@@ -93,10 +84,6 @@ app.get('/callback', (req, res) => {
   spotifyHelpers.redirectAfterLogin(req, res);
 });
 
-app.post('/createNewPlaylist', (req, res) => {
-  spotifyHelpers.createNewPlaylist(req, res);
-});
-
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -106,14 +93,10 @@ app.post('/createNewPlaylist', (req, res) => {
 // fetch top 50 songs by netVoteCount from songs collection and send to client
 app.get('/songs', (req, res) => {
 
-  Song.find({partyCode: req.query.partyCode}).sort({netVoteCount: 'descending'})
+  Song.find({partyCode: req.query.partyCode}).sort({netVoteCount: 'descending'}).limit(50)
   .then((songs) => {
     res.send(songs);
   });
-  // Song.find({}).sort({netVoteCount: 'descending'}).limit(50)
-  // .then((songs) => {
-  //   res.json(songs);
-  // });
 });
 
 // add songs to both user collection and songs collection
@@ -223,32 +206,32 @@ app.post('/party', (req,res) => {
 * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 // fetch all users from users collection and send to client
-app.get('/users', (req,res) => {
-  User.find({})
-  .then((users) => {
-    res.json(users);
-  });
-});
+// app.get('/users', (req,res) => {
+//   User.find({})
+//   .then((users) => {
+//     res.json(users);
+//   });
+// });
 
 // add user to users collection
-app.post('/signup', (req, res) => {
-  var newUser = new User({
-    name: req.body.username
-  });
+// app.post('/signup', (req, res) => {
+//   var newUser = new User({
+//     name: req.body.username
+//   });
 
-  User.findOne({name: req.body.username})
-  .then((user) => {
-    if (!user) {
-      newUser.save()
-      .then(() => {
-        req.session.username = req.body.username;
-        res.sendStatus(201);
-      });
-    } else {
-      res.send('User already exist!');
-    }
-  });
-});
+//   User.findOne({name: req.body.username})
+//   .then((user) => {
+//     if (!user) {
+//       newUser.save()
+//       .then(() => {
+//         req.session.username = req.body.username;
+//         res.sendStatus(201);
+//       });
+//     } else {
+//       res.send('User already exist!');
+//     }
+//   });
+// });
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   ALL Other Routes

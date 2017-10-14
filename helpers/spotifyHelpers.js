@@ -5,63 +5,11 @@ const request = require('request');
 const querystring = require('querystring');
 const otherHelpers = require('./otherHelpers.js');
 
-// const searchAuthOptions = {
-//   url: 'https://accounts.spotify.com/api/token',
-//   headers: {
-//     'Authorization': 'Basic ' + (new Buffer(credentials.client_id + ':' + credentials.client_secret).toString('base64'))
-//   },
-//   form: {
-//     grant_type: 'client_credentials'
-//   },
-//   json: true
-// };
 
 
-//use Spotify API credentials to get search results without needing to use Oauth
-// exports.getTrackSearchResults = (queryString) => {
-//   return new Promise((resolve, reject) => {
-//     request.post(searchAuthOptions, (error, response, body) => {
-//       if (!error && response.statusCode === 200) {
-//         const token = body.access_token;
-//         const options = {
-//           url: `https://api.spotify.com/v1/search?q=${queryString}&type=track&market=US&limit=10`,
-//           headers: {'Authorization': 'Bearer ' + token},
-//           json: true
-//         };
-//         request.get(options, (error, response, body) => {
-//           if (error) {
-//             reject(error);
-//           }
-//           resolve(body);
-//         });
-//       }
-//     });
-//   });
-// };
-
-exports.getTrackSearchResults = (req, res, queryString) => {
-  const options = {
-    url: `https://api.spotify.com/v1/search?q=${queryString}&type=track&market=US&limit=10`,
-    headers: {'Authorization': 'Bearer ' + req.query.access_token},
-    json: true
-  };
-  request.get(options, function(error, response, body) {
-    if (!error) {
-      res.send(body);
-    }
-  });
-};
-
-//used for checking state of browser for authentication
-const generateRandomString = (length) => {
-  let text = '';
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-};
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  OAUTH
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 //redirect host user to Spotify login page to obtain authorization code
 exports.handleHostLogin = (req, res) => {
@@ -80,7 +28,6 @@ exports.handleHostLogin = (req, res) => {
       state: state
     }));
 };
-
 
 //handle the redirect from Spotify after login and save the authorization code
 exports.redirectAfterLogin = (req, res) => {
@@ -120,22 +67,31 @@ exports.redirectAfterLogin = (req, res) => {
   });
 };
 
-exports.getHostInfo = (req, res) => {
-  var token = req.query.access_token;
-  const settings = {
-    url: 'https://api.spotify.com/v1/me',
-    headers: {
-      'Authorization': 'Bearer ' + token
-    }
-  }
 
-  request.get(settings, function(error, response, body) {
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  Search Functions
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+exports.getTrackSearchResults = (req, res, queryString) => {
+  const options = {
+    url: `https://api.spotify.com/v1/search?q=${queryString}&type=track&market=US&limit=10`,
+    headers: {'Authorization': 'Bearer ' + req.query.access_token},
+    json: true
+  };
+  request.get(options, function(error, response, body) {
     if (!error) {
       res.send(body);
     }
-  })
+  });
 };
 
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  Playlist Functions
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+//gets a list of the host's playlists
 exports.getHostPlaylists = (req, res) => {
   const settings = {
     url: 'https://api.spotify.com/v1/me/playlists',
@@ -151,23 +107,7 @@ exports.getHostPlaylists = (req, res) => {
   })
 }
 
-exports.currentlyPlaying = (req, res) => {
-  const settings = {
-    url: 'https://api.spotify.com/v1/me/player/currently-playing',
-    headers: {
-      'Authorization': 'Bearer ' + req.query.access_token
-    }
-  }
-
-  request.get(settings, function(error, response, body) {
-    if (!error) {
-      res.send(body);
-    }
-  })
-}
-
-
-
+//gets all the songs on a playlist
 exports.getPlaylistSongs = (req, res) => {
 
   const settings = {
@@ -184,23 +124,62 @@ exports.getPlaylistSongs = (req, res) => {
   })
 }
 
-
-exports.createNewPlaylist = (req, res) => {
-  console.log('Req:', req)
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  Player Functions
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+exports.currentlyPlaying = (req, res) => {
   const settings = {
-    url: 'https://api.spotify.com/v1/users/' + req.currentUser + '/playlists/',
-    body: JSON.stringify({
-      name: "testPlaylist",
-      public: true
-    }),
+    url: 'https://api.spotify.com/v1/me/player/currently-playing',
     headers: {
       'Authorization': 'Bearer ' + req.query.access_token
     }
   }
 
-  request.post(settings, function(error, response, body) {
-    if(!error) {
+  request.get(settings, function(error, response, body) {
+    if (!error) {
       res.send(body);
     }
   })
 }
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  User Info Functions
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+exports.getHostInfo = (req, res) => {
+  var token = req.query.access_token;
+  const settings = {
+    url: 'https://api.spotify.com/v1/me',
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  }
+
+  request.get(settings, function(error, response, body) {
+    if (!error) {
+      res.send(body);
+    }
+  })
+};
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  Helper Functions
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+//used for checking state of browser for authentication
+const generateRandomString = (length) => {
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
+
+
+
+
+
+
+
+
