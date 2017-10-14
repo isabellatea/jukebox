@@ -3,3 +3,5 @@ public/bundle.js
 env/credentials.js
 db/dbUri.js
 .DS_Store
+.floo
+.flooignore
