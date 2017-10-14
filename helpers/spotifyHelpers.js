@@ -6,7 +6,6 @@ const querystring = require('querystring');
 const otherHelpers = require('./otherHelpers.js');
 
 
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   OAUTH
 * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -124,6 +123,7 @@ exports.getPlaylistSongs = (req, res) => {
   })
 }
 
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   Player Functions
 * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -175,3 +175,4 @@ const generateRandomString = (length) => {
   }
   return text;
 };
+

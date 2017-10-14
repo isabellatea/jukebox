@@ -4,6 +4,7 @@ import React from 'react';
 const SearchEntry = (props) => {
   const clickHandler = () => {
     props.addSongs(props.Result);
+
   }
 
   return(
