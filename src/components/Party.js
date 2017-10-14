@@ -26,7 +26,6 @@ class Party extends React.Component {
       interval: null,
       deviceId: '',
       playlists: '',
-      searchQuery: '',
 
       searchList:null
     }
@@ -50,12 +49,10 @@ class Party extends React.Component {
     this.switchToGuest = this.switchToGuest.bind(this);
     this.switchToHost = this.switchToHost.bind(this);
 
-    this.queryHandler = this.queryHandler.bind(this);
     this.searchHandler = this.searchHandler.bind(this);
   }
 
   componentDidMount() {
-
     if (this.getSpotifyToken()) {
       this.setState({userType: 'host'});
       this.getDeviceId();
@@ -255,11 +252,13 @@ class Party extends React.Component {
     this.removeSong(songId);
   }
 
-  joinAsGuest () {
+  joinAsGuest (partyCode) {
     this.setState({userType: 'guest'});
-    console.log('Joining as Guest');
-    // this.getAllSongs();
-    this.getPlaylistSongs();
+    console.log('joining partyCode', partyCode);
+    this.setState({partyCode: partyCode})
+    //get party playlist
+    //get part host
+
   }
 
   removeSong(songId) {
@@ -272,14 +271,10 @@ class Party extends React.Component {
     })
   }
 
-  queryHandler(queryString) {
-    this.setState({searchQuery: queryString});
-  }
-
-  searchHandler() {
+  searchHandler(queryString) {
     axios.get('/songs/search', {
       params: {
-        query: this.state.searchQuery,
+        query: queryString,
         access_token: this.getSpotifyToken()
       }
     })

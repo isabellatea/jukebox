@@ -59,9 +59,6 @@ app.get('/hostInfo', (req, res) => {
 // fetch song research results and send to client
 app.get('/songs/search', (req, res) => {
   spotifyHelpers.getTrackSearchResults(req, res, req.query.query)
-  // .then((results) => {
-  //     res.json(results);
-  //   });
 });
 app.get('/hostPlaylists', (req, res) => {
   spotifyHelpers.getHostPlaylists(req, res);
@@ -200,6 +197,13 @@ app.post('/party', (req,res) => {
     })
 
 });
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * *
+  ROUTES to Party COLLECTION
+* * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   ROUTES to ACCESS DATABASE USER COLLECTION

@@ -2,11 +2,13 @@ import React from 'react';
 import SearchEntry from './SearchEntry';
 
 const Search = (props) => {
+  var queryString = "";
+
   const clickHandler = () => {
-    props.searchHandler(props.Result);
+    props.searchHandler(queryString);
   }
   const query = (input) => {
-    props.queryHandler(input.target.value);
+    queryString = input.target.value;
   }
 
   return (
