@@ -247,6 +247,7 @@
 
 
 /*Playlist*/
+
 .playlistEntry {
 width: 100%;
 background-color: rgba(51, 51, 51, .8);
@@ -263,7 +264,6 @@ overflow: auto;
   float: left;
   margin-right: 10px;
   vertical-align: text-top;
-
 }
 
 .playlistEntry span {
@@ -417,7 +417,3 @@ overflow: auto;
   top: '-20px';
   left: '95px';
 }
-
-
-
-
