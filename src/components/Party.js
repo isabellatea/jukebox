@@ -26,6 +26,8 @@ class Party extends React.Component {
       interval: null,
       deviceId: '',
       playlists: '',
+      access_token: null,
+      guestName: null,
 
       searchList:null
     }
@@ -50,6 +52,7 @@ class Party extends React.Component {
     this.switchToHost = this.switchToHost.bind(this);
 
     this.searchHandler = this.searchHandler.bind(this);
+    this.updateGuestName = this.updateGuestName.bind(this);
   }
 
   componentDidMount() {
@@ -98,21 +101,27 @@ class Party extends React.Component {
   }
 
   getSpotifyToken() {
-    const getHashParams = () => {
-    let hashParams = {};
-    let e, r = /([^&;=]+)=?([^&;]*)/g;
-    let q = window.location.hash.substring(1);
-    while ( e = r.exec(q)) {
-      hashParams[e[1]] = decodeURIComponent(e[2]);
-    }
-      return hashParams;
-    }
+    var access_token;
 
-    const params = getHashParams();
-    const access_token = params.access_token;
-    const refresh_token = params.refresh_token;
+    if (this.state.access_token) {
+      access_token = this.state.access_token;
+    } else {
+      const getHashParams = () => {
+      let hashParams = {};
+      let e, r = /([^&;=]+)=?([^&;]*)/g;
+      let q = window.location.hash.substring(1);
+      while ( e = r.exec(q)) {
+        hashParams[e[1]] = decodeURIComponent(e[2]);
+      }
+        return hashParams;
+      }
 
-    spotifyApi.setAccessToken(access_token);
+      const params = getHashParams();
+      access_token = params.access_token;
+      const refresh_token = params.refresh_token;
+      this.setState({access_token: access_token});
+      spotifyApi.setAccessToken(access_token);
+    }
     return access_token;
   }
   //Should generate a random party code that will refer to the current session for host/users
@@ -213,10 +222,21 @@ class Party extends React.Component {
   }
 
   addSongs(songs) {
+    var addedBy;
+    if (this.state.userType === 'host') {
+      addedBy = this.state.currentUser;
+    } else {
+      console.log('name', this.state.guestName);
+      if (this.state.guestName) {
+        addedBy = this.state.guestName;
+      } else {
+        addedBy = 'Anonymous'
+      }
+    }
     axios.post('/songs', {
       songs:songs,
       partyCode: this.state.partyCode,
-      userName: this.state.currentUser
+      userName: addedBy
     })
     .then((response)=> {
      this.getAllSongs(this.state.partyCode);
@@ -255,12 +275,23 @@ class Party extends React.Component {
   }
 
   joinAsGuest (partyCode) {
-    this.setState({userType: 'guest'});
     console.log('joining partyCode', partyCode);
-    this.setState({partyCode: partyCode})
-    //get party playlist
-    //get part host
-
+    axios.get('/party', {
+      params: {
+        partyCode: partyCode
+      }
+    })
+    .then((response) => {
+      console.log(response.data);
+      var party= response.data;
+      if (party) {
+        this.setState({partyCode: party.partyCode})
+        this.setState({userType: 'guest'});
+        this.setState({currentUser: party.partyHost});
+        this.setState({access_token: party.token});
+        this.getAllSongs(party.partyCode);
+      }
+    })
   }
 
   removeSong(songId) {
@@ -298,6 +329,10 @@ class Party extends React.Component {
     this.setState({userType: 'host'})
   }
 
+  updateGuestName(name){
+    this.setState({guestName: name});
+  }
+
   render() {
     var toBeRendered = () => {
       if (this.state.userType === null) {
@@ -310,34 +345,33 @@ class Party extends React.Component {
               <span className="switchUserTypeButton" onClick={this.switchToGuest}>Switch to Guest Mode</span>
               <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
             </div>
-            { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.createNewPlaylist}>Start A New Playlist</span></div>}
+
+            <div className ='hostPlaylistSelector'>
             { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.getExistingPlaylists}>Choose an Existing Playlist</span></div>}
-
-            <Search addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler}/>
-
             { !this.state.hasSongs &&
             <div className='playlistListContainer'>
               { this.state.playlists && <PlaylistSelector playlists={this.state.playlists} handleCurrentPlaylistClick={this.handleCurrentPlaylistClick} />}
             </div>
             }
+            { !this.state.hasSongs && <Search updateGuestName={this.updateGuestName} userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler} /> }
+            </div>
 
             <div className='spotifyPlayerContainer'>
               { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
               { this.state.hasSongs && <button className='playButton' onClick={this.handlePlayButtonClick}>{!this.state.currentSong ? 'Play Top Song' : 'Play Next Song'}</button> }
-              { this.state.hasSongs && <button className='addSongButton' onClick={this.handlePlayButtonClick}>Add A Song</button> }
+              { this.state.hasSongs && <Search userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler} /> }
             </div>
             <div className='playlistContainer'>
+              { this.state.hasSongs && <button onClick={()=>{this.getAllSongs(this.state.partyCode)}}>Refresh</button>}
               { this.state.hasSongs && <Playlist currentSong={this.state.currentSong} songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
             </div>
           </div>
 
         );
       }
-
       if (this.state.userType === 'guest') {
         return (
           <div>
-
             <div className="infoBarGuest">
               <span className="switchUserTypeButton" onClick={this.switchToHost}>Switch to Host Mode</span>
               <h2>Currently in {this.state.currentUser}'s Party! (Party Code: {this.state.partyCode})</h2>
@@ -346,9 +380,12 @@ class Party extends React.Component {
             <div className='currentlyPlayingContainer'>
               <img src="http://i66.tinypic.com/2rp9oih.png" alt="jukebox" /> <br />
               <p> Currently Playing: { this.state.currentSong.name } by {this.state.currentSong.artist} </p>
-              <button className='addSongButton' onClick={this.handlePlayButtonClick}>Add A Song</button>
+
+              <Search updateGuestName={this.updateGuestName} userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler}/>
+
             </div>
             <div className='playlistContainer'>
+              { this.state.hasSongs && <button onClick={()=>{this.getAllSongs(this.state.partyCode)}}>Refresh</button>}
               { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
             </div>
           </div>
@@ -364,4 +401,6 @@ class Party extends React.Component {
 }
 
 
-export default Party;
+export default Party
+
+

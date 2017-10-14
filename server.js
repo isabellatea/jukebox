@@ -44,7 +44,7 @@ const spotifyHelpers = require('./helpers/spotifyHelpers.js');
 
 
 // *** Server ***
-const server = app.listen(3000, () => {
+const server = app.listen(process.env.PORT || 3000, () => {
   console.log('Listening at http://localhost:3000');
 });
 
@@ -70,7 +70,7 @@ app.get('/currentlyPlaying', (req, res) => {
 
 app.get('/playlistSongs', (req, res) => {
   spotifyHelpers.getPlaylistSongs(req, res);
-})
+});
 
 // Host Authentication
 app.get('/hostLogin', (req, res) => {
@@ -90,15 +90,10 @@ app.get('/callback', (req, res) => {
 // fetch top 50 songs by netVoteCount from songs collection and send to client
 app.get('/songs', (req, res) => {
 
-
   Song.find({partyCode: req.query.partyCode}).sort({netVoteCount: 'descending'}).limit(50)
   .then((songs) => {
     res.send(songs);
   });
-  // Song.find({}).sort({netVoteCount: 'descending'}).limit(50)
-  // .then((songs) => {
-  //   res.json(songs);
-  // });
 });
 
 // add songs to both user collection and songs collection
@@ -110,21 +105,27 @@ app.post('/songs', (req, res) => {
 
   if (!Array.isArray(songsToAdd)){
     var song = songsToAdd;
-
-    new Song({
-      name: song.name,
-      artist: song.artists[0].name,
-      image: song.album.images[1].url,
-      link: song.external_urls.spotify,
-      upVoteCount: 1,
-      downVoteCount: 0,
-      netVoteCount: 1,
-      duration_ms: song.duration_ms,
-      userName: userName,
-      partyCode: partyCode
-    }).save();
+    Song.find({name: song.name, partyCode: partyCode})
+    .then((response)=> {
+      if (response.length>0) {
+        console.log('song already in list');
+      } else {
+        new Song({
+          name: song.name,
+          artist: song.artists[0].name,
+          image: song.album.images[1].url,
+          link: song.external_urls.spotify,
+          upVoteCount: 1,
+          downVoteCount: 0,
+          netVoteCount: 1,
+          duration_ms: song.duration_ms,
+          userName: userName,
+          partyCode: partyCode
+        }).save();
+      }
+      res.sendStatus(201);
+    })
   }
-
   else {
 
     for (var i = 0 ; i < songsToAdd.length ; i++) {
@@ -143,9 +144,9 @@ app.post('/songs', (req, res) => {
         partyCode: partyCode
       }).save();
     }
+    res.sendStatus(201);
   }
 
-  res.sendStatus(201);
 });
 
 // update vote on songs collection
@@ -177,13 +178,13 @@ app.delete('/song', (req, res) => {
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   ROUTES to ACCESS DATABASE PARTY COLLECTION
-<<<<<<< HEAD
 * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 //Look up party via party code
 app.get('/party', (req,res) => {
-  Party.find({partyCode: req.body.partyCode})
+  Party.findOne({partyCode: req.query.partyCode})
     .then((party) => {
-      res.json(party);
+      res.send(party);
     })
 });
 
@@ -192,7 +193,8 @@ app.post('/party', (req,res) => {
 
   var newParty = new Party({
     partyCode: req.body.partyCode,
-    partyHost: req.body.partyHost
+    partyHost: req.body.partyHost,
+    token: req.body.token
   });
   Party.findOne({partyCode: req.body.partyCode})
     .then((party) => {
@@ -207,45 +209,6 @@ app.post('/party', (req,res) => {
     })
 
 });
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * *
-  ROUTES to ACCESS DATABASE USER COLLECTION
-=======
->>>>>>> d321dda508ca4b7fc5dfc32f76d9ba1d068fa7e7
-* * * * * * * * * * * * * * * * * * * * * * * * * * */
-//Look up party via party code
-app.get('/party', (req,res) => {
-  Party.find({partyCode: req.body.partyCode})
-    .then((party) => {
-      res.json(party);
-    })
-});
-
-//Create new party
-app.post('/party', (req,res) => {
-
-  var newParty = new Party({
-    partyCode: req.body.partyCode,
-    partyHost: req.body.partyHost
-  });
-  Party.findOne({partyCode: req.body.partyCode})
-    .then((party) => {
-    if(!party) {
-      newParty.save()
-        .then(() => {
-        res.sendStatus(201);
-        });
-    } else {
-      res.send("Party already exists!");
-    }
-    })
-
-});
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * *
-  ROUTES to Party COLLECTION
-* * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 
 
 

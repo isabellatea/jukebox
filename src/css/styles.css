@@ -41,9 +41,6 @@
 }
 
 
-
-
-
 /*Container*/
 .container {
   position: relative;
@@ -84,8 +81,16 @@
   text-align: center;
 }
 
+.startPartyBoxes input {
+/*  display: inline-block;*/
+  font-size: 1em;
+  width: 30%;
+  padding: 4px 20px;
+}
+
 .startPartyTitles {
   background: #e6c954;
+  border: 1px solid #e6c954;
   color: white;
   padding: 10px 20px;
   font-size: 190%;
@@ -111,12 +116,14 @@
   margin-bottom: 55px;
 }
 
-
+.hostPlaylistSelector {
+  width: 50%;
+  margin: 0 auto;
+}
 
 
 /*Dashboards*/
 .hostPlaylistSelectorButton {
-  width: 550px;
   text-decoration: none;
   text-align: center;
   background: #e6c954;
@@ -128,6 +135,7 @@
   margin: 45px auto;
   display: block;
 }
+
 
 .hostPlaylistSelectorButton:hover {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#ceb44c), to(#e6c954));
@@ -184,9 +192,13 @@
   width: 40%;
   display: inline-block;
   vertical-align: text-top;
-  text-align: center;
-  font-weight: bold;
   margin: 20px auto;
+  margin-right: 15px;
+  padding-right: 10px;
+}
+
+.innerSpotifyPlayer {
+  margin: 0 auto;
 }
 
 .currentlyPlayingContainer {
@@ -212,8 +224,7 @@
 
 }
 
-.playButton, .addSongButton {
-  width: 50%;
+.playButton {
   text-decoration: none;
   background: #e6c954;
   color: white;
@@ -304,16 +315,84 @@ overflow: auto;
 
 /*Search*/
 .searchContainer {
+/*width: 90%;*/
+background-color: #e6c954;
+overflow: auto;
+}
 
+.searchTitleArea {
+  text-align: center;
+  overflow: auto;
+  padding-bottom: 20px;
+}
+
+.searchTitle {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+}
+
+.searchAreaResults {
+  margin: 0 auto;
 }
 
 .searchEntry {
+/*width: 80%;*/
+background-color: rgba(255, 255, 255, .8);
+margin: 22px;
+height: 100%;
+padding: 15px;
+color: black;
+overflow: auto;
+}
+
+.searchEntry span {
+  display: inline-block;
 
 }
 
+.searchEntry img {
+  max-width: 9%;
+  max-height: 9%;
+  float: left;
+  margin-right: 10px;
+  vertical-align: text-top;
+}
 
 
+.addSongButton {
+  background-color: #e6c954;
+  color: white;
+  border: 1px solid #e6c954;
+  margin-right: 5px;
+  font-weight: bold;
+  font-size: 1em;
+  padding: 8px 20px;
+  float: right;
+}
 
+.searchButton {
+  background-color: #333;
+  border: 1px solid #333;
+  color: white;
+  margin-left: 15px;
+  font-weight: bold;
+  font-size: 1em;
+  padding: 8px 20px;
+
+}
+
+.searchTitleArea input {
+/*  display: inline-block;*/
+  font-size: 1em;
+  width: 45%;
+  padding: 8px 20px;
+}
+
+.playlistEntrySongTitle {
+  font-weight: bold;
+}
 
 
 

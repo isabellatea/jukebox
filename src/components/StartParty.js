@@ -17,12 +17,12 @@ const StartParty = (props) => {
     <div>
         <a href="/hostLogin">
         <div className="startPartyBoxes">
-          <span className="startPartyTitles">Host a Party</span>
+          <button className="startPartyTitles">Host a Party</button>
         </div>
         </a>
         <div className="startPartyBoxes">
           <input onChange= {(input) => query(input)} type="text"/>
-          <button onClick={clickHandler}>Join</button>
+          <button className="startPartyTitles" onClick={clickHandler}>Join A Party</button>
         </div>
     </div>
   )
