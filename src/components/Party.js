@@ -10,9 +10,9 @@ import Playlist from './Playlist.js';
 import Player from './Player.js';
 import Search from './Search.js';
 
+
 const spotifyApi = new SpotifyWebApi();
-
-
+// cool
 class Party extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +25,10 @@ class Party extends React.Component {
       currentSong: '',
       interval: null,
       deviceId: '',
-      playlists: ''
+      playlists: '',
+      searchQuery: '',
+
+      searchList:null
     }
 
     this.getAllSongs = this.getAllSongs.bind(this);
@@ -47,6 +50,9 @@ class Party extends React.Component {
     this.handlePlayButtonClick = this.handlePlayButtonClick.bind(this);
     this.switchToGuest = this.switchToGuest.bind(this);
     this.switchToHost = this.switchToHost.bind(this);
+
+    this.queryHandler = this.queryHandler.bind(this);
+    this.searchHandler = this.searchHandler.bind(this);
   }
 
   componentDidMount() {
@@ -178,22 +184,6 @@ class Party extends React.Component {
     this.handlePlayButtonClick();
   }
 
-// //currently not working -- see waffleboard
-//   createNewPlaylist() {
-//     axios.post('/createNewPlaylist', {
-//       params: {
-//         currentUser: this.state.currentUser,
-//         name: 'myNewPlaylist',
-//         public: true
-//       }
-//     })
-//     .then((response) => {
-//       console.log("Making a new Playlist", response);
-//       console.log("ID Number:", response.location)
-//   //     this.setState({currentPlaylist: response.id}) //need to pull the playlist ID
-//     })
-//   }
-
   getExistingPlaylists() {
     axios.get('/hostPlaylists', {
       params: { access_token: this.getSpotifyToken()}
@@ -283,6 +273,25 @@ class Party extends React.Component {
     })
   }
 
+  queryHandler(queryString) {
+    this.setState({searchQuery: queryString});
+  }
+
+  searchHandler() {
+    axios.get('/songs/search', {
+      params: {
+        query: this.state.searchQuery,
+        access_token: this.getSpotifyToken()
+      }
+    })
+    .then((response) => {
+      this.setState({ searchList: response.data.tracks.items});
+      console.log('search list:', this.state.searchList);
+    })
+    .catch((err) => {
+      console.error.bind(err);
+    })
+  }
 
   switchToGuest() {
     this.getCurrentSong();
@@ -309,6 +318,8 @@ class Party extends React.Component {
               <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
             </div>
             { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.createNewPlaylist}>Start A New Playlist</span></div>}
+            <Search addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler}/>
+
             { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.getExistingPlaylists}>Choose an Existing Playlist</span></div>}
 
             { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
@@ -350,10 +361,3 @@ class Party extends React.Component {
 
 
 export default Party;
-
-
-            // {this.state.currentUser && this.state.currentPlaylist &&
-            // <div className='spotifyPlayerContainer'>
-            //   <PlayerHost currentUser={this.state.currentUser} currentPlaylist={this.state.currentPlaylist}/>
-            // </div>}
-            // <Search getSpotifyToken={this.getSpotifyToken} addSongs={this.addSongs} />

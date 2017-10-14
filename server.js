@@ -116,15 +116,14 @@ app.get('/songs', (req, res) => {
   // });
 });
 
-// add song to both user collection and songs collection
+// add songs to both user collection and songs collection
 app.post('/songs', (req, res) => {
-
   var songsToAdd = req.body.songs;
   var partyCode = req.body.partyCode;
   var userName = req.body.userName;
-  for (var i = 0 ; i < songsToAdd.length ; i++) {
-    var song = songsToAdd[i].track;
 
+  if (!Array.isArray(songsToAdd)){
+    var song = songsToAdd;
     new Song({
       name: song.name,
       artist: song.artists[0].name,
@@ -137,6 +136,25 @@ app.post('/songs', (req, res) => {
       userName: userName,
       partyCode: partyCode
     }).save();
+  }
+  else {
+
+    for (var i = 0 ; i < songsToAdd.length ; i++) {
+      var song = songsToAdd[i].track;
+
+      new Song({
+        name: song.name,
+        artist: song.artists[0].name,
+        image: song.album.images[1].url,
+        link: song.external_urls.spotify,
+        upVoteCount: 1,
+        downVoteCount: 0,
+        netVoteCount: 1,
+        duration_ms: song.duration_ms,
+        userName: userName,
+        partyCode: partyCode
+      }).save();
+    }
   }
   res.sendStatus(201);
 });
