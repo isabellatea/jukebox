@@ -151,7 +151,6 @@ app.post('/songs', (req, res) => {
 
 // update vote on songs collection
 app.put('/song', (req, res) => {
-  console.log('song to vote:', req.body);
   Song.findOne({name: req.body.name, partyCode: req.body.partyCode})
   .then(function(song) {
     if (song) {
@@ -176,6 +175,17 @@ app.delete('/song', (req, res) => {
   res.sendStatus(201);
 });
 
+// delete all songs from one party
+app.delete('/song', (req, res) => {
+
+
+  // const songId = req.query.id;
+  // Song.remove({'_id': songId}, (err) => {
+  //   if (err) { console.log(err); }
+  // });
+  // res.sendStatus(201);
+});
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   ROUTES to ACCESS DATABASE PARTY COLLECTION
 * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -190,6 +200,9 @@ app.get('/party', (req,res) => {
 
 //Create new party
 app.post('/party', (req,res) => {
+
+  //first check if user already has a party create
+  //if user already has a party, delete that one & delete songs with that party code
 
   var newParty = new Party({
     partyCode: req.body.partyCode,

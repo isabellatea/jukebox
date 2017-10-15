@@ -12,21 +12,22 @@ import Search from './Search.js';
 
 
 const spotifyApi = new SpotifyWebApi();
+
 // cool
 class Party extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: '',
+      currentUser: '', //eventually refactor to hostName
       userType: null,
       partyCode: null,
+      access_token: null,
+      deviceId: '',
       songs: null,
       hasSongs: false,
       currentSong: '',
       interval: null,
-      deviceId: '',
       playlists: '',
-      access_token: null,
       guestName: null,
 
       searchList:null
@@ -53,6 +54,7 @@ class Party extends React.Component {
 
     this.searchHandler = this.searchHandler.bind(this);
     this.updateGuestName = this.updateGuestName.bind(this);
+    this.leaveParty = this.leaveParty.bind(this);
   }
 
   componentDidMount() {
@@ -274,6 +276,7 @@ class Party extends React.Component {
   }
 
   handlePlayButtonClick () {
+    this.getAllSongs(this.state.partyCode);
     const trackId = this.state.songs[0].link.split('track/')[1];
     const songId = this.state.songs[0]._id;
     this.setState({currentSong: this.state.songs[0]});
@@ -340,6 +343,13 @@ class Party extends React.Component {
     this.setState({guestName: name});
   }
 
+  leaveParty(){
+    //delete songs from db song collection
+    //delete party from db party collection
+    //clear local state data
+    console.log('leaving party');
+  }
+
   render() {
     var toBeRendered = () => {
       if (this.state.userType === null) {
@@ -349,7 +359,9 @@ class Party extends React.Component {
         return (
           <div>
             <div className="infoBarHost">
-              <span className="switchUserTypeButton" onClick={this.switchToGuest}>Switch to Guest Mode</span>
+              { this.state.userType ? <button className="infoBarButton" onClick={this.leaveParty} >Leave Party</button> : '' }
+              { this.state.userType === 'host' ? <button className="infoBarButton" onClick={this.switchToGuest}>View as Guest</button> : '' }
+              { this.state.hasSongs && <button className="infoBarButton" onClick={()=>{this.getAllSongs(this.state.partyCode)}}>Refresh Playlist</button> }
               <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
             </div>
 
@@ -365,11 +377,10 @@ class Party extends React.Component {
 
             <div className='spotifyPlayerContainer'>
               { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
-              { this.state.hasSongs && <button className='playButton' onClick={this.handlePlayButtonClick}>{!this.state.currentSong ? 'Play Top Song' : 'Play Next Song'}</button> }
+              { this.state.hasSongs && <button className='playButton' onClick={this.handlePlayButtonClick}>{!this.state.currentSong ? 'Start Playlist' : 'Skip To Next Song'}</button> }
               { this.state.hasSongs && <Search userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler} /> }
             </div>
             <div className='playlistContainer'>
-              { this.state.hasSongs && <button onClick={()=>{this.getAllSongs(this.state.partyCode)}}>Refresh</button>}
               { this.state.hasSongs && <Playlist currentSong={this.state.currentSong} songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
             </div>
           </div>
@@ -380,7 +391,9 @@ class Party extends React.Component {
         return (
           <div>
             <div className="infoBarGuest">
-              <span className="switchUserTypeButton" onClick={this.switchToHost}>Switch to Host Mode</span>
+              { this.state.userType ? <a href='/'><button className="infoBarButton">Leave Party</button></a> : '' }
+              { this.state.userType === 'host' ? <button className="infoBarButton" onClick={this.switchToHost}>Back To Host Dashboard</button> : '' }
+              { this.state.hasSongs && <button className="infoBarButton" onClick={()=>{this.getAllSongs(this.state.partyCode)}}>Refresh Playlist</button>}
               <h2>Currently in {this.state.currentUser}'s Party! (Party Code: {this.state.partyCode})</h2>
             </div>
 
@@ -393,7 +406,6 @@ class Party extends React.Component {
             </div>
 
             <div className='playlistContainer'>
-              { this.state.hasSongs && <button onClick={()=>{this.getAllSongs(this.state.partyCode)}}>Refresh</button>}
               { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
             </div>
           </div>

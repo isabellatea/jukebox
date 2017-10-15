@@ -4,6 +4,11 @@
   font-family: helvetica;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 .app {
   max-width: 1300px;
   margin: auto;
@@ -143,49 +148,37 @@
 
 
 
-.infoBarHost {
+.infoBarHost, .infoBarGuest {
   background-color: rgba(47, 143, 202, 0.5);
   width: 100%;
   padding: 10px;
   opacity: .8;
 }
 
-.infoBarHost:hover {
-  background-image: url('http://i65.tinypic.com/mu766r.jpg');
-}
-
 .infoBarGuest {
   background-color: rgba(255, 215, 0, 0.5);
-  width: 100%;
-  padding: 10px;
-  opacity: .8;
 }
 
-.infoBarGuest:hover {
+.infoBarHost:hover, .infoBarGuest:hover {
   background-image: url('http://i65.tinypic.com/mu766r.jpg');
+}
 
+.infoBarHost:hover .infoBarButton, .infoBarGuest:hover .infoBarButton {
+  background-color: #000;
+  border: 0px solid #000;
+  color: white;
 }
 
 
-.switchUserTypeButton {
-   border-top: 1px solid #000000;
-   background: #000000;
-   padding: 7px 14px;
-   -webkit-border-radius: 8px;
-   -moz-border-radius: 8px;
-   border-radius: 8px;
-   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
-   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
-   box-shadow: rgba(0,0,0,1) 0 1px 0;
-   text-shadow: rgba(0,0,0,.4) 0 1px 0;
-   color: white;
-   font-size: 14px;
-   font-family: Georgia, serif;
-   text-decoration: none;
-   vertical-align: middle;
-   margin: 5px;
-   display: inline-block;
-   float: right;
+.infoBarButton {
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 0px solid #fff;
+  color: black;
+  margin-left: 8px;
+  font-weight: bold;
+  font-size: 1em;
+  padding: 8px 20px;
+  float: right;
 }
 
 .spotifyPlayerContainer {
@@ -224,7 +217,6 @@
   width: 55%;
   display: inline-block;
   vertical-align: text-top;
-
 }
 
 .playButton {
@@ -318,7 +310,6 @@ overflow: auto;
 
 /*Search*/
 .searchContainer {
-/*width: 90%;*/
 background-color: #e6c954;
 overflow: auto;
 }
@@ -341,7 +332,6 @@ overflow: auto;
 }
 
 .searchEntry {
-/*width: 80%;*/
 background-color: rgba(255, 255, 255, .8);
 margin: 22px;
 height: 100%;
@@ -387,7 +377,6 @@ overflow: auto;
 }
 
 .searchTitleArea input {
-/*  display: inline-block;*/
   font-size: 1em;
   width: 55%;
   padding: 8px 20px;
@@ -406,7 +395,7 @@ overflow: auto;
 
 
 /*WIP/Dead CSS/Unknown*/
-
+/*
 .title {
   display: inline-block;
   font-family: 'verdana';
@@ -427,7 +416,7 @@ overflow: auto;
   display: 'inline-block';
   width:'50%';
   float: 'right'
-}
+}*/
 
 /*.playlistSelectorEntry {
    border-top: 1px solid #96d1f8;
@@ -449,7 +438,7 @@ overflow: auto;
    display: inline-block;
 }*/
 
-
+/*
 .playButtonStyle {
   width: '100%';
   margin: '16px';
@@ -500,4 +489,4 @@ overflow: auto;
   position: 'relative';
   top: '-20px';
   left: '95px';
-}
+}*/

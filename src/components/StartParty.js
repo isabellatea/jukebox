@@ -21,7 +21,7 @@ const StartParty = (props) => {
         </div>
         </a>
         <div className="startPartyBoxes">
-          <input onChange= {(input) => query(input)} type="text"/>
+          <input placeholder='Enter Party Code Here!' onChange= {(input) => query(input)} type="text"/>
           <button className="startPartyTitles" onClick={clickHandler}>Join A Party</button>
         </div>
     </div>
