@@ -205,9 +205,9 @@
   width: 40%;
   display: inline-block;
   vertical-align: text-top;
-  text-align: center;
-  font-weight: bold;
   margin: 20px auto;
+  margin-right: 15px;
+  padding-right: 10px;
 }
 
 .currentlyPlayingContainer img {
@@ -216,6 +216,9 @@
   margin-top: 10px;
 }
 
+.currentlyPlayingInner {
+  margin: 0 auto;
+}
 
 .playlistContainer {
   width: 55%;
@@ -376,7 +379,7 @@ overflow: auto;
   background-color: #333;
   border: 1px solid #333;
   color: white;
-  margin-left: 15px;
+  margin-left: 8px;
   font-weight: bold;
   font-size: 1em;
   padding: 8px 20px;
@@ -386,8 +389,10 @@ overflow: auto;
 .searchTitleArea input {
 /*  display: inline-block;*/
   font-size: 1em;
-  width: 45%;
+  width: 55%;
   padding: 8px 20px;
+  float: left;
+  margin-left: 22px;
 }
 
 .playlistEntrySongTitle {

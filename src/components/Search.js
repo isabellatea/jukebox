@@ -27,8 +27,8 @@ const Search = (props) => {
           <p className='searchTitle'>Add A Song</p>
 
 
-          {props.userType === 'host' ? '' : <input onChange= {(input) => name(input)} type="text"/>}
-          <input onChange= {(input) => query(input)} type="text"/>
+          {props.userType === 'host' ? '' : <input placeholder="what's your name?!" onChange= {(input) => name(input)} type="text"/>}
+          <input placeholder="searchity searchy search" onChange= {(input) => query(input)} type="text"/>
           <button className="searchButton" onClick={clickHandler}>Search</button>
         </div>
         <div className='searchAreaResults'>

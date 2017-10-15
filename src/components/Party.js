@@ -196,8 +196,15 @@ class Party extends React.Component {
       params: { access_token: this.getSpotifyToken()}
     })
     .then((response) => {
-      this.setState({playlists: response.data.items});
-    })
+      var allPlaylists = response.data.items;
+      var userOwnedPlaylists = [];
+      for (var i = 0; i < allPlaylists.length ; i++) {
+        if (allPlaylists[i].owner.id === this.state.currentUser) {
+          userOwnedPlaylists.push(allPlaylists[i]);
+        }
+      }
+      this.setState({playlists: userOwnedPlaylists});
+    });
   }
 
   handleCurrentPlaylistClick(playlist) {
@@ -378,12 +385,13 @@ class Party extends React.Component {
             </div>
 
             <div className='currentlyPlayingContainer'>
-              <img src="http://i66.tinypic.com/2rp9oih.png" alt="jukebox" /> <br />
-              <p> Currently Playing: { this.state.currentSong.name } by {this.state.currentSong.artist} </p>
-
+              <div className='currentlyPlayingInner'>
+                <img src="http://i66.tinypic.com/2rp9oih.png" alt="jukebox" /> <br />
+                <p> Currently Playing: { this.state.currentSong.name } by {this.state.currentSong.artist} </p>
+              </div>
               <Search updateGuestName={this.updateGuestName} userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler}/>
-
             </div>
+
             <div className='playlistContainer'>
               { this.state.hasSongs && <button onClick={()=>{this.getAllSongs(this.state.partyCode)}}>Refresh</button>}
               { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
