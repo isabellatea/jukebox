@@ -23,7 +23,27 @@ a {
   margin: auto;
 }
 
+@keyframes wipeLeft {
+  from { margin-left: 100%; width: 100%; }
+  to   { margin-left: 0%; width: 100%;}
+}
 
+
+.wipeLeft {
+  animation-name: wipeLeft;
+  animation-duration: 2s;
+}
+
+@keyframes wipeRight {
+  from { margin-right: 100%; width: 100%; }
+  to   { margin-right: 0%; width: 100%;}
+}
+
+
+.wipeRight {
+  animation-name: wipeRight;
+  animation-duration: 2s;
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   Header
@@ -207,6 +227,7 @@ a {
 
 .innerSpotifyPlayer {
   margin: 0 auto;
+  text-align: center;
 }
 
 .currentlyPlayingContainer {
@@ -219,13 +240,20 @@ a {
 }
 
 .currentlyPlayingContainer img {
-  max-width: 30%;
-  max-height: 30%;
+  max-width: 40%;
+  max-height: 40%;
   margin-top: 10px;
+  margin-bottom: 5px;
 }
 
 .currentlyPlayingInner {
   margin: 0 auto;
+  text-align: center;
+}
+
+.currentlyPlayingTitle {
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 .playlistContainer {
@@ -247,10 +275,19 @@ a {
   border: 1px solid #e6c954;
 }
 
+.playButton:hover, .playlistEntryButton:hover, .addSongButton:hover {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ceb44c), to(#e6c954));
+
+}
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   Playlist List
 * * * * * * * * * * * * * * * * * * * * * * * * * * */
+.playlistListContainer {
+  margin-top: -20px;
+  margin-bottom: 35px;
+}
+
 .playlistSelectorEntry {
   text-decoration: none;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#ceb44c), to(#e6c954));
@@ -281,6 +318,14 @@ height: 100%;
 padding: 15px;
 color: white;
 overflow: auto;
+}
+
+.playlistEntry:hover {
+  background-color: rgba(51, 51, 51, .9);
+}
+
+.playlistEntry:hover .playlistEntryButtonRemove {
+  display: inline-block;
 }
 
 .playlistEntry img {
@@ -325,6 +370,24 @@ overflow: auto;
   font-size: 1.2em;
 }
 
+.playlistEntryButtonRemove {
+  width: 30px;
+  height: 30px;
+  background-color: rgba(139,0,0, 1);
+  color: white;
+  border-radius: 50%;
+  border: 1px solid rgba(139,0,0, 1);
+  margin-right: 5px;
+  font-weight: bold;
+  font-size: 1.2em;
+  display: none;
+  float: left;
+}
+
+.playlistEntryButtonRemove:hover {
+  background-color: rgba(139,0,0, .8);
+  border: 1px solid rgba(139,0,0, .8);
+}
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -361,6 +424,10 @@ overflow: auto;
   overflow: auto;
 }
 
+.searchEntry:hover {
+  background-color: rgba(255, 255, 255, .9);
+}
+
 .searchEntry span {
   display: inline-block;
 }
@@ -390,10 +457,15 @@ overflow: auto;
   background-color: #333;
   border: 1px solid #333;
   color: white;
-  margin-left: 8px;
+  margin-left: 5px;
+  margin-right: 5px;
   font-weight: bold;
   font-size: 1em;
   padding: 8px 20px;
+}
+
+.searchButton:hover {
+  background-color: #000;
 }
 
 .searchTitleArea input {
