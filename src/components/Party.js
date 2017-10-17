@@ -48,6 +48,7 @@ class Party extends React.Component {
     this.upVote = this.upVote.bind(this);
     this.downVote = this.downVote.bind(this);
     this.addSongs = this.addSongs.bind(this);
+    this.removeSong = this.removeSong.bind(this);
 
     //player functions
     this.getCurrentSong = this.getCurrentSong.bind(this);
@@ -428,13 +429,12 @@ class Party extends React.Component {
       }
       if (this.state.userType === 'host') {
         return (
-          <div>
+          <div className='wipeLeft'>
             <div className="infoBarHost">
               { this.state.userType ? <button className="infoBarButton" onClick={this.leaveParty} >Leave Party</button> : '' }
               { this.state.hasSongs && <button className="infoBarButton" onClick={()=>{this.getAllSongs(this.state.partyCode)}}>Refresh Playlist</button> }
               <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
             </div>
-
             <div className ='hostPlaylistSelector'>
               { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.getExistingPlaylists}>Choose an Existing Playlist</span></div>}
               { !this.state.hasSongs && <div className='playlistListContainer'>
@@ -442,20 +442,24 @@ class Party extends React.Component {
               { !this.state.hasSongs && <Search updateGuestName={this.updateGuestName} userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler} /> }
             </div>
 
-            <div className='spotifyPlayerContainer'>
-              { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
-              { this.state.hasSongs && <button className='playButton' onClick={this.handlePlayButtonClick}>{!this.state.currentSong ? 'Start Playlist' : 'Skip To Next Song'}</button> }
-              { this.state.hasSongs && <Search userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler} /> }
-            </div>
-            <div className='playlistContainer'>
-              { this.state.hasSongs && <Playlist currentSong={this.state.currentSong} songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
-            </div>
+              { this.state.hasSongs && 
+                <div className='dashboardContainer wipeLeft'>
+                  <div className='spotifyPlayerContainer'>
+                      { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
+                      <button className='playButton' onClick={this.handlePlayButtonClick}>{!this.state.currentSong ? 'Start Playlist' : 'Skip To Next Song'}</button>
+                      <Search userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler} />
+                  </div>
+                  <div className='playlistContainer'>
+                    <Playlist currentSong={this.state.currentSong} songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} removeSong={this.removeSong} userType={this.state.userType} />
+                  </div>
+                </div>
+              }
           </div>
         );
       }
       if (this.state.userType === 'guest') {
         return (
-          <div>
+          <div className="wipeLeft">
             <div className="infoBarGuest">
               { this.state.userType ? <button onClick= {this.leaveParty} className="infoBarButton">Leave Party</button> : '' }
               { <button className="infoBarButton" onClick={()=>{this.refreshJukebox()}}>Refresh Playlist</button>}
@@ -465,13 +469,13 @@ class Party extends React.Component {
             <div className='currentlyPlayingContainer'>
               <div className='currentlyPlayingInner'>
                 <img src="http://i66.tinypic.com/2rp9oih.png" alt="jukebox" /> <br />
-                { this.state.currentSong && <p> Currently Playing: { this.state.currentSong.name } by { this.state.currentSong.artists[0].name } </p>}
+                { this.state.currentSong && <p className='currentlyPlayingTitle'> Currently Playing: { this.state.currentSong.name } by { this.state.currentSong.artists[0].name } </p>}
               </div>
               <Search updateGuestName={this.updateGuestName} userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler}/>
             </div>
 
             <div className='playlistContainer'>
-              { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} /> }
+              { this.state.songs && <Playlist songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} removeSong={this.removeSong} userType={this.state.userType}/> }
             </div>
           </div>
         )
@@ -488,3 +492,13 @@ class Party extends React.Component {
 
 export default Party
 
+
+
+            // <div className='spotifyPlayerContainer'>
+            //   { this.state.currentSong && <div className='wipeLeft'><Player trackId={this.state.currentSong.link.split('track/')[1]}/></div>}
+            //   { this.state.hasSongs && <div className='wipeLeft'><button className='playButton' onClick={this.handlePlayButtonClick}>{!this.state.currentSong ? 'Start Playlist' : 'Skip To Next Song'}</button></div> }
+            //   { this.state.hasSongs && <div className='wipeLeft'><Search userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler} /></div> }
+            // </div>
+            // <div className='playlistContainer'>
+            //   { this.state.hasSongs && <div className='wipeLeft'><Playlist currentSong={this.state.currentSong} songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} removeSong={this.removeSong} userType={this.state.userType} /></div> }
+            // </div>

@@ -14,8 +14,14 @@ const PlaylistEntry = (props) => {
     props.handlePlay(props.song);
   }
 
+  const handleRemoveButtonClick = () => {
+    props.removeSong(props.song._id);
+    console.log(props.song._id);
+  }
+
   return (
     <div className='playlistEntry'>
+      { props.userType === 'host' && <button className='playlistEntryButtonRemove'onClick={handleRemoveButtonClick}> X </button> }
       <img src={props.song.image} />
       <div className='votesSection'>
         <span className='playlistEntryVotes'>Votes: {props.song.netVoteCount}</span>
