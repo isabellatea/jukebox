@@ -55,6 +55,8 @@ class Party extends React.Component {
     this.searchHandler = this.searchHandler.bind(this);
     this.updateGuestName = this.updateGuestName.bind(this);
     this.leaveParty = this.leaveParty.bind(this);
+    this.removeAllSongs = this.removeAllSongs.bind(this);
+    this.removeParty = this.removeParty.bind(this);
   }
 
   componentDidMount() {
@@ -242,37 +244,45 @@ class Party extends React.Component {
         addedBy = 'Anonymous'
       }
     }
-    axios.post('/songs', {
-      songs:songs,
-      partyCode: this.state.partyCode,
-      userName: addedBy
-    })
-    .then((response)=> {
-     this.getAllSongs(this.state.partyCode);
-    })
+    if (this.state.partyCode) {
+      axios.post('/songs', {
+        songs:songs,
+        partyCode: this.state.partyCode,
+        userName: addedBy
+      })
+      .then((response)=> {
+       this.getAllSongs(this.state.partyCode);
+      })
+    } else {
+      window.location = '/';
+    }
   }
 
   getAllSongs(partyCode) {
-    axios.get('/songs', {
-      params: {
-        partyCode: partyCode
-      }
-    })
-    .then((response) => {
-      var songs = response.data;
-      this.setState({songs : []});
-      for (var i = 0 ; i < songs.length; i++) {
-        this.state.songs.push(songs[i]);
-      }
-      if (this.state.songs.length > 0) {
-        this.setState({hasSongs: true});
-      } else {
-        this.setState({hasSongs: false});
-      }
-    })
-    .catch((err) => {
-      console.error.bind(err);
-    })
+    if (this.state.partyCode) {
+      axios.get('/songs', {
+        params: {
+          partyCode: partyCode
+        }
+      })
+      .then((response) => {
+        var songs = response.data;
+        this.setState({songs : []});
+        for (var i = 0 ; i < songs.length; i++) {
+          this.state.songs.push(songs[i]);
+        }
+        if (this.state.songs.length > 0) {
+          this.setState({hasSongs: true});
+        } else {
+          this.setState({hasSongs: false});
+        }
+      })
+      .catch((err) => {
+        console.error.bind(err);
+      })
+    } else {
+      window.location = '/';
+    }
   }
 
   handlePlayButtonClick () {
@@ -314,6 +324,26 @@ class Party extends React.Component {
     })
   }
 
+  removeAllSongs() {
+    axios.delete('/songs', {params: {partyCode: this.state.partyCode}})
+    .then((response) => {
+      this.getAllSongs(this.state.partyCode);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  removeParty() {
+    axios.delete('/party', {params: {partyCode: this.state.partyCode}})
+    .then((response) => {
+
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
   searchHandler(queryString) {
     axios.get('/songs/search', {
       params: {
@@ -344,10 +374,27 @@ class Party extends React.Component {
   }
 
   leaveParty(){
-    //delete songs from db song collection
-    //delete party from db party collection
-    //clear local state data
-    console.log('leaving party');
+
+    this.removeAllSongs();
+
+    this.setState({
+      currentUser: '',
+      userType: null,
+      partyCode: null,
+      access_token: null,
+      deviceId: '',
+      songs: null,
+      hasSongs: false,
+      currentSong: '',
+      interval: null,
+      playlists: '',
+      guestName: null,
+      searchList:null
+    });
+    this.removeParty();
+
+    window.location = '/';
+
   }
 
   render() {

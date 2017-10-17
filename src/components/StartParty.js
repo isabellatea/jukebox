@@ -30,8 +30,3 @@ const StartParty = (props) => {
 
 
 export default StartParty;
-          // <form onSubmit={props.join}>
-          // <span className="startPartyTitles" onClick={(e)=> {props.joinAsGuest(e)}}>Join A Party</span>
-          //   <label htmlFor="partyCode" className="partyCodeText">Party Code:</label>
-          //   <input id="partyCode" type="partyCode" name="partyCode"/>
-          // </form>

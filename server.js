@@ -176,14 +176,13 @@ app.delete('/song', (req, res) => {
 });
 
 // delete all songs from one party
-app.delete('/song', (req, res) => {
+app.delete('/songs', (req, res) => {
 
+  Song.remove({partyCode: req.query.partyCode}, (err) => {
+    if (err) { console.log(err); }
+  });
+  res.sendStatus(201);
 
-  // const songId = req.query.id;
-  // Song.remove({'_id': songId}, (err) => {
-  //   if (err) { console.log(err); }
-  // });
-  // res.sendStatus(201);
 });
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -220,7 +219,16 @@ app.post('/party', (req,res) => {
       res.send("Party already exists!");
     }
     })
+});
 
+app.delete('/party', (req, res)=>{
+
+  Party.remove({partyCode: req.query.partyCode}, (err)=> {
+    if (err) {
+      console.log(err);
+    }
+    res.sendStatus(201);
+  })
 });
 
 
