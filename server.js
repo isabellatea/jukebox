@@ -232,39 +232,6 @@ app.delete('/party', (req, res)=>{
 });
 
 
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * *
-  ROUTES to ACCESS DATABASE USER COLLECTION
-* * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-// fetch all users from users collection and send to client
-// app.get('/users', (req,res) => {
-//   User.find({})
-//   .then((users) => {
-//     res.json(users);
-//   });
-// });
-
-// add user to users collection
-// app.post('/signup', (req, res) => {
-//   var newUser = new User({
-//     name: req.body.username
-//   });
-
-//   User.findOne({name: req.body.username})
-//   .then((user) => {
-//     if (!user) {
-//       newUser.save()
-//       .then(() => {
-//         req.session.username = req.body.username;
-//         res.sendStatus(201);
-//       });
-//     } else {
-//       res.send('User already exist!');
-//     }
-//   });
-// });
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   ALL Other Routes
 * * * * * * * * * * * * * * * * * * * * * * * * * * */

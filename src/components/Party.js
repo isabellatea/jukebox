@@ -49,14 +49,16 @@ class Party extends React.Component {
 
     this.songEnded = this.songEnded.bind(this);
     this.handlePlayButtonClick = this.handlePlayButtonClick.bind(this);
-    this.switchToGuest = this.switchToGuest.bind(this);
-    this.switchToHost = this.switchToHost.bind(this);
+    //this.switchToGuest = this.switchToGuest.bind(this);
+    //this.switchToHost = this.switchToHost.bind(this);
 
     this.searchHandler = this.searchHandler.bind(this);
     this.updateGuestName = this.updateGuestName.bind(this);
     this.leaveParty = this.leaveParty.bind(this);
+    this.leavePartyGuest = this.leavePartyGuest.bind(this);
     this.removeAllSongs = this.removeAllSongs.bind(this);
     this.removeParty = this.removeParty.bind(this);
+    this.refreshJukebox = this.refreshJukebox.bind(this);
   }
 
   componentDidMount() {
@@ -70,11 +72,14 @@ class Party extends React.Component {
 
 
   getCurrentSong() {
-    axios.get('/currentlyPlaying')
+    axios.get('/currentlyPlaying', {
+      params: {
+        access_token : this.state.access_token
+      }
+    })
     .then((response) => {
-      console.log("Currently Track/Song ID:",response.data.item.id);
       this.setState({
-        currentSong: response.data.item.id
+        currentSong: response.data.item
       })
     })
     .catch((err) => {
@@ -295,14 +300,12 @@ class Party extends React.Component {
   }
 
   joinAsGuest (partyCode) {
-    console.log('joining partyCode', partyCode);
     axios.get('/party', {
       params: {
         partyCode: partyCode
       }
     })
     .then((response) => {
-      console.log(response.data);
       var party= response.data;
       if (party) {
         this.setState({partyCode: party.partyCode})
@@ -310,6 +313,7 @@ class Party extends React.Component {
         this.setState({currentUser: party.partyHost});
         this.setState({access_token: party.token});
         this.getAllSongs(party.partyCode);
+        this.getCurrentSong();
       }
     })
   }
@@ -359,15 +363,15 @@ class Party extends React.Component {
     })
   }
 
-  switchToGuest() {
-    this.getCurrentSong();
-    this.setState({userType: 'guest'})
-  }
+  // switchToGuest() {
+  //   this.getCurrentSong();
+  //   this.setState({userType: 'guest'})
+  // }
 
-  switchToHost() {
-    this.getCurrentSong();
-    this.setState({userType: 'host'})
-  }
+  // switchToHost() {
+  //   this.getCurrentSong();
+  //   this.setState({userType: 'host'})
+  // }
 
   updateGuestName(name){
     this.setState({guestName: name});
@@ -397,6 +401,30 @@ class Party extends React.Component {
 
   }
 
+  leavePartyGuest() {
+
+    this.setState({
+      currentUser: '',
+      userType: null,
+      partyCode: null,
+      access_token: null,
+      deviceId: '',
+      songs: null,
+      hasSongs: false,
+      currentSong: '',
+      interval: null,
+      playlists: '',
+      guestName: null,
+      searchList:null
+    });
+    window.location = '/';
+  }
+
+  refreshJukebox() {
+    this.getAllSongs(this.state.partyCode);
+    this.getCurrentSong();
+  }
+
   render() {
     var toBeRendered = () => {
       if (this.state.userType === null) {
@@ -407,7 +435,6 @@ class Party extends React.Component {
           <div>
             <div className="infoBarHost">
               { this.state.userType ? <button className="infoBarButton" onClick={this.leaveParty} >Leave Party</button> : '' }
-              { this.state.userType === 'host' ? <button className="infoBarButton" onClick={this.switchToGuest}>View as Guest</button> : '' }
               { this.state.hasSongs && <button className="infoBarButton" onClick={()=>{this.getAllSongs(this.state.partyCode)}}>Refresh Playlist</button> }
               <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
             </div>
@@ -438,16 +465,15 @@ class Party extends React.Component {
         return (
           <div>
             <div className="infoBarGuest">
-              { this.state.userType ? <a href='/'><button className="infoBarButton">Leave Party</button></a> : '' }
-              { this.state.userType === 'host' ? <button className="infoBarButton" onClick={this.switchToHost}>Back To Host Dashboard</button> : '' }
-              { this.state.hasSongs && <button className="infoBarButton" onClick={()=>{this.getAllSongs(this.state.partyCode)}}>Refresh Playlist</button>}
+              { this.state.userType ? <button onClick= {this.leavePartyGuest} className="infoBarButton">Leave Party</button> : '' }
+              { <button className="infoBarButton" onClick={()=>{this.refreshJukebox()}}>Refresh Playlist</button>}
               <h2>Currently in {this.state.currentUser}'s Party! (Party Code: {this.state.partyCode})</h2>
             </div>
 
             <div className='currentlyPlayingContainer'>
               <div className='currentlyPlayingInner'>
                 <img src="http://i66.tinypic.com/2rp9oih.png" alt="jukebox" /> <br />
-                <p> Currently Playing: { this.state.currentSong.name } by {this.state.currentSong.artist} </p>
+                { this.state.currentSong && <p> Currently Playing: { this.state.currentSong.name } by { this.state.currentSong.artists[0].name } </p>}
               </div>
               <Search updateGuestName={this.updateGuestName} userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler}/>
             </div>
@@ -471,3 +497,5 @@ class Party extends React.Component {
 export default Party
 
 
+              // { this.state.userType === 'host' ? <button className="infoBarButton" onClick={this.switchToGuest}>View as Guest</button> : '' }
+              // { this.state.userType === 'host' ? <button className="infoBarButton" onClick={this.switchToHost}>Back To Host Dashboard</button> : '' }
