@@ -3,7 +3,6 @@ const Promise = require('bluebird');
 const cookieParser = require('cookie-parser');
 const request = require('request');
 const querystring = require('querystring');
-const otherHelpers = require('./otherHelpers.js');
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
