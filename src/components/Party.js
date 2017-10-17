@@ -494,4 +494,4 @@ class Party extends React.Component {
 }
 
 
-export default Party
+export default Party;
