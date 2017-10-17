@@ -8,18 +8,16 @@ const SearchEntry = (props) => {
   }
 
   return(
-    <div>
-      <div className='searchImage'>
-        <img src={props.Result.album.images[2].url} alt="" />
-      </div>
-      <div className='searchContent'>
-        <p>Name: {props.Result.name}</p>
-        <p>Artist: {props.Result.artists[0].name}</p>
-      </div>
-      <button onClick={clickHandler}>Add To Playlist</button>
+    <div className='searchEntry'>
+      <img src={props.Result.album.images[2].url} />
+      <button className='addSongButton' onClick={clickHandler}> Add </button>
+      <span><span className='playlistEntrySongTitle'>{props.Result.name}</span> by {props.Result.artists[0].name} </span><br />
     </div>
   )
 }
+
+
+
 
 
 export default SearchEntry;

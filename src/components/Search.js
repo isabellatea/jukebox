@@ -2,28 +2,47 @@ import React from 'react';
 import SearchEntry from './SearchEntry';
 
 const Search = (props) => {
+  var queryString = "";
+
   const clickHandler = () => {
-    props.searchHandler(props.Result);
+    props.searchHandler(queryString);
   }
   const query = (input) => {
-    props.queryHandler(input.target.value);
+    queryString = input.target.value;
   }
+  const name = (input) => {
+    props.updateGuestName(input.target.value);
+  }
+
+  const getName = (function(){
+    console.log('userName', userName);
+    return userName;
+  }).bind(this);
 
   return (
 
     <div>
-      <p>Add a Song</p>
-      <input onChange= {(input) => query(input)} type="text"/>
-      <br />
-      <button onClick={clickHandler}>Search</button>
-      { props.searchList && props.searchList.map(
-        (result, i) => {
-          return (
-            <SearchEntry addSongs={props.addSongs} key={i} Result={result}/>
-          )
-        })
-      }
+      <div className='searchContainer'>
+        <div className='searchTitleArea'>
+          <p className='searchTitle'>Add A Song</p>
+
+
+          {props.userType === 'host' ? '' : <input placeholder="what's your name?!" onChange= {(input) => name(input)} type="text"/>}
+          <input placeholder="searchity searchy search" onChange= {(input) => query(input)} type="text"/>
+          <button className="searchButton" onClick={clickHandler}>Search</button>
+        </div>
+        <div className='searchAreaResults'>
+          { props.searchList && props.searchList.map(
+            (result, i) => {
+              return (
+                <SearchEntry getName={getName} addSongs={props.addSongs} key={i} Result={result}/>
+              )
+            })
+          }
+        </div>
+      </div>
     </div>
+
   );
 
 }

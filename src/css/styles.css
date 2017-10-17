@@ -61,7 +61,7 @@ a {
   z-index: 1;
   margin: auto;
   width: 100%;
-  
+
 
 }
 
@@ -343,18 +343,18 @@ overflow: auto;
 }
 
 .searchEntry {
-background-color: rgba(255, 255, 255, .8);
-margin: 22px;
-height: 100%;
-padding: 15px;
-color: black;
-overflow: auto;
+  background-color: rgba(255, 255, 255, .8);
+  margin: 22px;
+  height: 100%;
+  padding: 15px;
+  color: black;
+  overflow: auto;
 }
 
 .searchEntry span {
   display: inline-block;
-
 }
+
 
 .searchEntry img {
   max-width: 9%;
@@ -384,7 +384,6 @@ overflow: auto;
   font-weight: bold;
   font-size: 1em;
   padding: 8px 20px;
-
 }
 
 .searchTitleArea input {
@@ -400,13 +399,9 @@ overflow: auto;
 }
 
 
-
-
-
-
-
 /*WIP/Dead CSS/Unknown*/
 /*
+
 .title {
   display: inline-block;
   font-family: 'verdana';

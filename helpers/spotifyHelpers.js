@@ -3,7 +3,6 @@ const Promise = require('bluebird');
 const cookieParser = require('cookie-parser');
 const request = require('request');
 const querystring = require('querystring');
-const otherHelpers = require('./otherHelpers.js');
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -110,7 +109,7 @@ exports.getHostPlaylists = (req, res) => {
 exports.getPlaylistSongs = (req, res) => {
 
   const settings = {
-    url: 'https://api.spotify.com/v1/users/' + req.query.user + '/playlists/' + req.query.playlist + '/tracks',
+    url: 'https://api.spotify.com/v1/users/' + req.query.user + '/playlists/' + req.query.playlist + '/tracks?limit=15',
     headers: {
       'Authorization': 'Bearer ' + req.query.access_token
     }
