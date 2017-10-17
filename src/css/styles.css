@@ -28,20 +28,18 @@ a {
   to   { margin-left: 0%; width: 100%;}
 }
 
-
 .wipeLeft {
   animation-name: wipeLeft;
   animation-duration: 2s;
 }
 
-@keyframes wipeRight {
-  from { margin-right: 100%; width: 100%; }
-  to   { margin-right: 0%; width: 100%;}
+@keyframes wipeDown {
+  from { margin-bottom: 100%; width: 100%; }
+  to   { margin-bottom: 0%; width: 100%;}
 }
 
-
-.wipeRight {
-  animation-name: wipeRight;
+.wipeDown {
+  animation-name: wipeDown;
   animation-duration: 2s;
 }
 
@@ -170,6 +168,7 @@ a {
   text-decoration: none;
   text-align: center;
   background: #e6c954;
+  border: 1px solid #e6c954;
   color: white;
   padding: 20px 20px;
   font-size: 190%;
@@ -177,6 +176,7 @@ a {
   font-weight: bold;
   margin: 45px auto;
   display: block;
+
 }
 
 

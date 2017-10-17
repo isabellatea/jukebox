@@ -435,25 +435,29 @@ class Party extends React.Component {
               { this.state.hasSongs && <button className="infoBarButton" onClick={()=>{this.getAllSongs(this.state.partyCode)}}>Refresh Playlist</button> }
               <h2>HI {this.state.currentUser}!! Your Party Code: {this.state.partyCode}</h2>
             </div>
-            <div className ='hostPlaylistSelector'>
-              { !this.state.hasSongs && <div><span className="hostPlaylistSelectorButton" onClick={this.getExistingPlaylists}>Choose an Existing Playlist</span></div>}
-              { !this.state.hasSongs && <div className='playlistListContainer'>
-                { this.state.playlists && <PlaylistSelector playlists={this.state.playlists} handleCurrentPlaylistClick={this.handleCurrentPlaylistClick} />}</div>}
-              { !this.state.hasSongs && <Search updateGuestName={this.updateGuestName} userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler} /> }
-            </div>
-
-              { this.state.hasSongs && 
-                <div className='dashboardContainer wipeLeft'>
-                  <div className='spotifyPlayerContainer'>
-                      { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
-                      <button className='playButton' onClick={this.handlePlayButtonClick}>{!this.state.currentSong ? 'Start Playlist' : 'Skip To Next Song'}</button>
-                      <Search userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler} />
-                  </div>
-                  <div className='playlistContainer'>
-                    <Playlist currentSong={this.state.currentSong} songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} removeSong={this.removeSong} userType={this.state.userType} />
-                  </div>
+            
+            { !this.state.hasSongs && 
+              <div className ='hostPlaylistSelector'>
+                <span className="hostPlaylistSelectorButton" onClick={this.getExistingPlaylists}>Choose an Existing Playlist</span>
+                <div className='playlistListContainer'>
+                  { this.state.playlists && <PlaylistSelector playlists={this.state.playlists} handleCurrentPlaylistClick={this.handleCurrentPlaylistClick} />}
                 </div>
-              }
+                <Search updateGuestName={this.updateGuestName} userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler} /> 
+              </div>
+            }
+
+            { this.state.hasSongs && 
+              <div className='dashboardContainer wipeLeft'>
+                <div className='spotifyPlayerContainer'>
+                  { this.state.currentSong && <Player trackId={this.state.currentSong.link.split('track/')[1]}/>}
+                  <button className='playButton' onClick={this.handlePlayButtonClick}>{!this.state.currentSong ? 'Start Playlist' : 'Skip To Next Song'}</button>
+                  <Search userType={this.state.userType} addSongs={this.addSongs} searchList={this.state.searchList} queryHandler={this.queryHandler} searchHandler={this.searchHandler} />
+                </div>
+                <div className='playlistContainer'>
+                  <Playlist currentSong={this.state.currentSong} songs={this.state.songs} upVote={this.upVote} downVote={this.downVote} removeSong={this.removeSong} userType={this.state.userType} />
+                </div>
+              </div>
+            }
           </div>
         );
       }
