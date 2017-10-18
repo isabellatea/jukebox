@@ -16,7 +16,6 @@ const PlaylistEntry = (props) => {
 
   const handleRemoveButtonClick = () => {
     props.removeSong(props.song._id);
-    console.log(props.song._id);
   }
 
   return (

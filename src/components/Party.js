@@ -277,9 +277,13 @@ class Party extends React.Component {
 
   upVote(song) {
     song.vote = 1;
+    if (localStorage.getItem(song.partyCode + song._id)) {
+      return;
+    }
     axios.put('/song', song)
     .then((response) => {
       this.getAllSongs(this.state.partyCode);
+      localStorage.setItem(song.partyCode + song._id, true);
     })
     .catch((err) => {
       console.log(err);
@@ -288,9 +292,13 @@ class Party extends React.Component {
 
   downVote(song) {
     song.vote = -1;
+    if (localStorage.getItem(song.partyCode + song._id)) {
+      return;
+    }
     axios.put('/song', song)
     .then((response) => {
       this.getAllSongs(this.state.partyCode);
+      localStorage.setItem(song.partyCode + song._id, true);
     })
     .catch((err) => {
       console.log(err);
