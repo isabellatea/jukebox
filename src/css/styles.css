@@ -30,7 +30,7 @@ a {
 
 .wipeLeft {
   animation-name: wipeLeft;
-  animation-duration: 2s;
+  animation-duration: 1s;
 }
 
 @keyframes wipeDown {
