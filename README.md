@@ -1,23 +1,19 @@
-# JukeBox App
-
+#Jukebox
 A viewable, dynamic, interactive song playlist application.
-
-## Team
-
- - __API__: Nick Havens
- - __Front-end__: Jessica D'Andrea
- - __Server__: Joey Li / Vasanth Kesavan
- - __Database__: Joey Li / Vasanth Kesavan
- - __Deployment__: Nick Havens
 
 ## Table of Contents
 
-1. [Usage](#Usage)
-1. [Requirements](#requirements)
-1. [Environment](#environment)
+1. [Screenshot](#screenshot)
+1. [Usage](#usage)
+1. [Development](#development)
     1. [Installing Dependencies](#installing-dependencies)
+    1. [Roadmap](#roadmap)
+1. [Environment](#environment)
 1. [Team](#team)
 1. [Contributing](#contributing)
+
+## Screenshot
+![JukeboxHomepage](http://i65.tinypic.com/2u4oite.png)
 
 ## Usage
 
@@ -45,6 +41,29 @@ In order to play a song, the user must be logged in as host. To read more about 
 ### Logging in as host
 For the song player to work you must click on 'Login as Host' and log into Spotify with a premium account. You will remain logged in for the session depending on your browser settings. Spotify Oath is used for host login and the redirect url for the development and production environments must be stored in the developers Spotify API account https://developer.spotify.com/my-applications/#!/applications.
 
+
+## Development
+
+
+### Installing Dependencies
+
+> npm install
+
+> nodemon server.js
+
+### Roadmap
+
+
+> npm start 
+
+> localhost: 3000
+
+> src/components: all components
+
+> db: db files
+
+
+
 ## Environment
 The project uses a gitignored file called env/credentials.js to supply the Spotify API keys as well as the redirect url and production env variable. Fill in your information to credentials.example.js and remove 'example' from the filename for the API and Webpack
 environment to function correctly
@@ -55,15 +74,18 @@ environment to function correctly
 *Client Credentials Flow (used for Spotify search): https://developer.spotify.com/web-api/authorization-guide/#client-credentials-flow
 *Spotify-web-api-js (used in Playlist component for triggering playback) : https://doxdox.org/jmperez/spotify-web-api-js
 
-### Installing Dependencies
 
-From within the root directory:
 
-```sh
-npm install
-nodemon server.js
-```
+## Team
 
+  - Harsh Sikka
+  - Candice Lai
+  - Isabella Tea
+  - Steve Rodriguez
+
+  Legacy: Nick Havens, Jessica D'Andrea, Joey Li, and Vasanth Kesavan
+
+  
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+> Please do. Submit a pull request :)
