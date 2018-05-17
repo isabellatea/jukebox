@@ -4,7 +4,7 @@ A viewable, dynamic, interactive song playlist application.
 
 ## Table of Contents
 
-1. [Screenshot](#screenshot)
+1. [Link and Screenshot](#link-and-screenshot)
 1. [Usage](#usage)
 1. [Development](#development)
     1. [Installing Dependencies](#installing-dependencies)
@@ -13,7 +13,9 @@ A viewable, dynamic, interactive song playlist application.
 1. [Team](#team)
 1. [Contributing](#contributing)
 
-## Screenshot
+## Link and Screenshot
+Link: https://jukebox-pizza.herokuapp.com/
+
 ![JukeboxHomepage](http://i65.tinypic.com/2u4oite.png)
 
 ## Usage
