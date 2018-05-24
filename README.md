@@ -71,7 +71,7 @@ For the song player to work you must click on 'Login as Host' and log into Spoti
 The project uses a gitignored file called env/credentials.js to supply the Spotify API keys as well as the redirect url and production env variable. Fill in your information to credentials.example.js and remove 'example' from the filename for the API and Webpack
 environment to function correctly
 
-##Spotify API Documentation
+## Spotify API Documentation
 *Endpoint reference: https://developer.spotify.com/web-api/endpoint-reference/
 *Authorization Code Flow (used for host login and player): https://developer.spotify.com/web-api/authorization-guide/#authorization-code-flow
 *Client Credentials Flow (used for Spotify search): https://developer.spotify.com/web-api/authorization-guide/#client-credentials-flow
