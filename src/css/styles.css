@@ -11,6 +11,10 @@ a {
   color: black;
 }
 
+body {
+  margin: 0;
+}
+
 ::selection {
   background: #ceb44c; /* WebKit/Blink Browsers */
 }
@@ -56,6 +60,7 @@ a {
   margin: auto;
   display: inline-block;
   margin-right: 10px;
+  max-height: 40px;
 }
 
 .header-item {
@@ -97,7 +102,7 @@ a {
   z-index: 2;
   margin: 0 auto;
   display: block;
-  background-image: url('http://i66.tinypic.com/sza7hj.png');
+  background-image: url('/images/pizza-party.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;

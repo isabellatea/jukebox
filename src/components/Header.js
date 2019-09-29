@@ -29,7 +29,7 @@ class Header extends React.Component {
     return (
       <div>
         <div className="header">
-            <a href='/'><img src='http://i67.tinypic.com/335ej5e.png' alt='pizza jukebox' className="header-title" /></a>
+            <a href='/'><img src='/images/logo.png' alt='pizza jukebox' className="header-title" /></a>
         </div>
       </div>
     )
