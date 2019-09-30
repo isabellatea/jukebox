@@ -16,7 +16,7 @@ A viewable, dynamic, interactive song playlist application.
 ## Link and Screenshot
 Link: https://jukebox-pizza.herokuapp.com/
 
-![JukeboxHomepage](https://i.ibb.co/f0g3xM4/Screen-Shot-2019-09-30-at-2-57-26-PM.png)
+![JukeboxHomepage](https://i.ibb.co/vkHw6gh/pz.jpg)
 
 ## Usage
 
